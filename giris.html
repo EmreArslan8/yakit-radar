@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Giriş Yap / Üye Ol | YakıtRadar</title>
+<meta name="description" content="YakıtRadar'a giriş yapın veya ücretsiz üye olun; fiyat alarmları ve favori şehirler için."><meta name="robots" content="noindex">
+<meta name="theme-color" content="#090b0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap auth"><div class="auth-box">
+  <div style="text-align:center;margin-bottom:26px"><span class="eyebrow">Üyelik</span><h1 style="margin-top:12px" id="ttl">Tekrar hoş geldin.</h1></div>
+  <div class="card">
+    <div class="chips" id="tabs" style="margin-bottom:22px"><button class="chip on" data-v="login">Giriş yap</button><button class="chip" data-v="reg">Üye ol</button></div>
+    <form id="form" novalidate>
+      <div class="field" id="nameF" hidden><label>Ad Soyad</label><input id="name" autocomplete="name"></div>
+      <div class="field"><label>E-posta</label><input id="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label>Parola</label><input id="pass" type="password" autocomplete="current-password" required></div>
+      <button class="btn block" id="go">Giriş yap</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+    <div class="small mute" id="demo" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+      Demo hesap: <b class="mono" style="color:var(--ink)">demo@yakitradar.com / demo123</b><br>Admin: <b class="mono" style="color:var(--ink)">admin@yakitradar.com / admin123</b></div>
+  </div>
+</div></main>
+<div id="foot"></div>
+<script type="module">
+let mode = 'login';
+const next = new URLSearchParams(location.search).get('next');
+if (Auth.current()) location.replace(Auth.current().role === 'admin' ? 'admin.html' : 'panel.html');
+bindChips('tabs', v => {
+  mode = v; $('#nameF').hidden = v !== 'reg'; $('#go').textContent = v === 'reg' ? 'Hesap oluştur' : 'Giriş yap';
+  $('#ttl').textContent = v === 'reg' ? 'Ücretsiz üye ol.' : 'Tekrar hoş geldin.'; $('#demo').hidden = v === 'reg'; $('#err').textContent = '';
+});
+$('#form').onsubmit = e => {
+  e.preventDefault();
+  const r = mode === 'reg' ? Auth.register($('#name').value, $('#email').value, $('#pass').value) : Auth.login($('#email').value, $('#pass').value);
+  if (r.error) { $('#err').textContent = r.error; return; }
+  location.href = next || (r.user.role === 'admin' ? 'admin.html' : 'panel.html');
+};
+</script>
+</body></html>

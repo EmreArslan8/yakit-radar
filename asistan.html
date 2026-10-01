@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Akaryakıt Asistanı | YakıtRadar</title>
+<meta name="description" content="Akaryakıt fiyatları, şehir karşılaştırma, tahmin ve yakıt maliyeti hakkında AI asistana soru sorun.">
+<meta name="theme-color" content="#090b0a"><meta property="og:title" content="AI akaryakıt asistanı"><meta property="og:type" content="website">
+<link rel="canonical" href="https://yakitradar.example/asistan.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap">
+  <header class="section" style="padding-bottom:20px">
+    <span class="eyebrow"><i data-lucide="sparkles" class="i"></i>AI asistan</span>
+    <h1 style="margin:12px 0 10px">Sor, anında cevaplasın.</h1>
+    <p class="mute" style="max-width:520px">Fiyat, şehir karşılaştırma, tahmin ve maliyet hesabı için doğal dille yaz.</p>
+  </header>
+  <div class="grid" style="grid-template-columns:1fr 300px;align-items:start" id="layout">
+    <div class="card chat">
+      <div class="msgs" id="msgs"></div>
+      <form class="chat-in" id="f"><input id="q" placeholder="Örn: Ankara'da motorin kaç lira?" autocomplete="off" aria-label="Mesaj"><button class="btn" aria-label="Gönder"><i data-lucide="arrow-up" class="i"></i></button></form>
+    </div>
+    <div class="card flat"><h3 style="margin-bottom:14px">Deneyebileceklerin</h3><div class="chips" id="quick" style="flex-direction:column;align-items:stretch"></div></div>
+  </div>
+</main>
+<style>@media(max-width:900px){#layout{grid-template-columns:1fr!important}}</style>
+<div id="foot"></div>
+
+<script type="module">
+const norm = t => t.toLocaleLowerCase('tr').replace(/[?!.,]/g, '');
+const QUICK = ['Benzin kaç lira?', 'En ucuz şehir hangisi?', 'Yarın zam gelecek mi?', 'LPG mi benzin mi?', '450 km yolculuk kaça mal olur?', 'İzmir ile Ankara karşılaştır'];
+$('#quick').innerHTML = QUICK.map(q => `<button class="chip" style="justify-content:flex-start;text-align:left">${q}</button>`).join('');
+
+const pills = (arr) => `<div class="chips">${arr.map(([t, c]) => `<span class="tag gray" ${c ? `style="color:${c}"` : ''}>${t}</span>`).join('')}</div>`;
+const findCity = t => CITIES.find(c => t.includes(c.n.toLocaleLowerCase('tr')) || t.includes(c.s));
+const findFuel = t => t.includes('motorin') || t.includes('dizel') ? 'motorin' : t.includes('lpg') || t.includes('otogaz') ? 'lpg' : 'benzin';
+
+async function answer(raw) {
+  const t = norm(raw), cities = CITIES.filter(c => t.includes(c.n.toLocaleLowerCase('tr')) || t.includes(c.s)), city = cities[0]?.n || Store.city, f = findFuel(t);
+  if (/^(merhaba|selam|hey|naber)/.test(t)) return 'Merhaba! Fiyatlar, şehir karşılaştırma, tahmin veya yolculuk maliyeti hakkında soru sorabilirsin.';
+  const km = t.match(/(\d{2,4})\s*km/);
+  if (km) { const L = +km[1] * 6.5 / 100, p = priceOf(f, city); return `<b>${km[1]} km</b> yolculuk (6,5 L/100 km varsayımıyla, ${city}, ${FUELS[f].name}):<br><b class="mono" style="color:var(--lime);font-size:1.4rem">${tl(L * p)}</b>` + pills([[L.toFixed(1) + ' litre'], [tl(p) + '/L']]); }
+  if (/zam|indirim|tahmin|yarın|gelecek hafta|ne olur/.test(t)) {
+    const F = await API.forecast(f, 7), word = { up: 'yükseliş', down: 'düşüş', flat: 'yatay seyir' }[F.dir];
+    return `${FUELS[f].name} için AI modeli <b>${word}</b> bekliyor. Yarın ≈ <b class="mono">${tl(F.mid[0])}</b>, 7 gün sonra ≈ <b class="mono">${tl(F.mid.at(-1))}</b>.` + pills([['Güven %' + F.conf], [(F.diff > 0 ? '+' : '') + num(F.diff) + ' ₺ / 7g', F.diff > 0 ? 'var(--up)' : 'var(--down)']]) + `<div class="small mute" style="margin-top:8px">Kesin garanti değildir. <a href="gecmis.html?f=${f}" style="color:var(--lime)">Grafiği aç →</a></div>`;
+  }
+  if (cities.length >= 2) { const [a, b] = cities; return `${FUELS[f].name}: <b>${a.n}</b> ${tl(priceOf(f, a.n))} · <b>${b.n}</b> ${tl(priceOf(f, b.n))}.<br>Fark: <b class="mono" style="color:var(--lime)">${num(Math.abs(priceOf(f, a.n) - priceOf(f, b.n)))} ₺/L</b> (${priceOf(f, a.n) < priceOf(f, b.n) ? a.n : b.n} daha ucuz).`; }
+  if (t.includes('lpg') && t.includes('benzin')) { const b = priceOf('benzin', city) * 7, l = priceOf('lpg', city) * 9; return `100 km'de (7 L benzin / 9 L LPG): benzin <b class="mono">${tl(b)}</b>, LPG <b class="mono">${tl(l)}</b>. LPG yaklaşık <b style="color:var(--lime)">%${Math.round((1 - l / b) * 100)}</b> daha ucuz; dönüşüm maliyetini unutma.`; }
+  if (/ucuz|en düşük|pahalı/.test(t)) { const R = await API.ranking(f), pick = t.includes('pahalı') ? R.at(-1) : R[0]; return `${FUELS[f].name} için ${t.includes('pahalı') ? 'en pahalı' : 'en ucuz'} şehir <b>${pick.city}</b>: <b class="mono" style="color:var(--lime)">${tl(pick.price)}</b>.` + pills(R.slice(0, 3).map(r => [`${r.city} ${num(r.price)}`])); }
+  if (/marka|istasyon|opet|shell|bp|aytemiz|petrol ofisi/.test(t)) { const B = (await API.brands(city)).sort((a, b) => a[f] - b[f]); return `${city} ${FUELS[f].name} fiyatlarında en uygun marka <b>${B[0].name}</b> (${tl(B[0][f])}).` + pills(B.slice(0, 4).map(b => [`${b.name} ${num(b[f])}`])); }
+  if (/kaç|fiyat|ne kadar|benzin|motorin|lpg|dizel/.test(t)) { const P = await API.prices(city); return `${city} güncel fiyatlar:` + `<div style="margin-top:8px;display:grid;gap:6px">${FUEL_KEYS.map(k => `<div style="display:flex;justify-content:space-between;gap:20px"><span><span class="dot" style="--c:${FUELS[k].color};display:inline-block;margin-right:8px"></span>${FUELS[k].name}</span><b class="mono">${tl(P[k].price)}</b></div>`).join('')}</div>`; }
+  return 'Bunu tam anlayamadım. Şunları sorabilirsin: <i>“Ankara’da benzin kaç lira?”</i>, <i>“yarın zam var mı?”</i>, <i>“300 km kaça mal olur?”</i>.';
+}
+
+const msgs = $('#msgs');
+function add(html, me) { const d = document.createElement('div'); d.className = 'msg' + (me ? ' me' : ''); d.innerHTML = html; msgs.append(d); msgs.scrollTop = msgs.scrollHeight; return d; }
+async function ask(text) {
+  if (!text.trim()) return; add(esc(text), 1);
+  const ty = add('<div class="typing"><i></i><i></i><i></i></div>');
+  const [html] = await Promise.all([answer(text), new Promise(r => setTimeout(r, 550))]);
+  ty.innerHTML = html; msgs.scrollTop = msgs.scrollHeight; icons();
+}
+add('Merhaba, ben YakıtRadar asistanı. Fiyat, tahmin ve yolculuk maliyeti hakkında soru sorabilirsin.');
+$('#f').onsubmit = e => { e.preventDefault(); const v = $('#q').value; $('#q').value = ''; ask(v); };
+$('#quick').onclick = e => { const b = e.target.closest('.chip'); if (b) ask(b.textContent); };
+</script>
+</body></html>

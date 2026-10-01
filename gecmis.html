@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Akaryakıt Fiyat Geçmişi ve AI Fiyat Tahmini | YakıtRadar</title>
+<meta name="description" content="Benzin, motorin ve LPG fiyat geçmişi grafikleri, zam-indirim kayıtları ve 7 günlük AI fiyat tahmini.">
+<meta name="theme-color" content="#090b0a"><meta property="og:title" content="Fiyat geçmişi ve AI tahmin"><meta property="og:type" content="website">
+<link rel="canonical" href="https://yakitradar.example/gecmis.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script><script src="js/charts.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap">
+  <header class="section" style="padding-bottom:20px">
+    <span class="eyebrow"><i data-lucide="line-chart" class="i"></i>Geçmiş & tahmin</span>
+    <h1 style="margin:12px 0 10px">Fiyat nereye gidiyor?</h1>
+    <p class="mute" style="max-width:520px">Geçmiş fiyatlar düz çizgi, AI tahmini kesikli çizgi ve gölgeli güven aralığıyla gösterilir.</p>
+  </header>
+
+  <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;margin-bottom:18px">
+    <div id="fuelBox"></div>
+    <div class="chips" id="ranges"><button class="chip" data-v="7">7 gün</button><button class="chip on" data-v="30">30 gün</button><button class="chip" data-v="90">90 gün</button><button class="chip" data-v="180">180 gün</button></div>
+  </div>
+
+  <div class="card"><div class="chart-box"><canvas id="chart"></canvas></div></div>
+
+  <div class="grid g4" id="stats" style="margin-top:16px"></div>
+
+  <section class="section" style="padding-bottom:0">
+    <div class="grid g2" style="align-items:start">
+      <div class="card" id="aiCard"></div>
+      <div>
+        <div class="sec-head" style="margin-bottom:14px"><h2>Zam / indirim kayıtları</h2><button class="btn ghost sm" id="csv"><i data-lucide="download" class="i"></i>CSV indir</button></div>
+        <div class="twrap"><table><thead><tr><th>Tarih</th><th>Eski</th><th>Yeni</th><th>Değişim</th></tr></thead><tbody id="log"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="foot"></div>
+
+<script type="module">
+const qp = new URLSearchParams(location.search);
+let fuel = FUELS[qp.get('f')] ? qp.get('f') : 'benzin', days = 30, chart, lastCsv = [];
+$('#fuelBox').innerHTML = fuelChips(fuel, 'fc');
+
+async function render() {
+  const [H, F, C] = await Promise.all([API.history(fuel, days), API.forecast(fuel, 7), API.changes(fuel, 10)]);
+  const color = FUELS[fuel].color, h = H.values, off = priceOf(fuel, Store.city) - priceOf(fuel, 'İstanbul'), a = v => +(v + off).toFixed(2);
+  const pad = n => Array(n).fill(null), last = a(h.at(-1));
+  chart?.destroy();
+  chart = ChartKit.line($('#chart'), { labels: [...H.labels, ...F.labels], yFmt: v => v.toFixed(2) + ' ₺', series: [
+    { label: FUELS[fuel].name, data: [...h.map(a), ...pad(7)], color, fill: true, step: true },
+    { label: 'alt', data: [...pad(days - 1), last, ...F.lo.map(a)], color: '#c8ff3d', meta: true },
+    { label: 'üst', data: [...pad(days - 1), last, ...F.hi.map(a)], color: '#c8ff3d', meta: true, fillPrev: true },
+    { label: 'AI tahmin', data: [...pad(days - 1), last, ...F.mid.map(a)], color: '#c8ff3d', dash: true },
+  ] });
+  const mn = Math.min(...h), mx = Math.max(...h), chg = h.at(-1) - h[0];
+  $('#stats').innerHTML = [['Güncel', tl(last), 'gauge'], [`${days}g en düşük`, tl(a(mn)), 'arrow-down-right'], [`${days}g en yüksek`, tl(a(mx)), 'arrow-up-right'], [`${days}g değişim`, (chg > 0 ? '+' : '') + num(chg) + ' ₺', 'activity']]
+    .map(([t, v, i]) => `<div class="card flat stat"><span class="lbl"><i data-lucide="${i}" class="i"></i>${t}</span><b class="mono" style="font-family:var(--f-mono);font-weight:500;font-size:1.7rem">${v}</b></div>`).join('');
+  const dirTxt = { up: ['Yükseliş eğilimi', 'trending-up', 'red'], down: ['Düşüş eğilimi', 'trending-down', ''], flat: ['Yatay seyir', 'minus', 'gray'] }[F.dir];
+  $('#aiCard').innerHTML = `<span class="eyebrow"><i data-lucide="brain-circuit" class="i"></i>AI tahmin · ${Store.city}</span>
+    <h2 class="mono" style="margin:12px 0 6px;font-size:2.4rem">${tl(a(F.mid.at(-1)))}</h2><p class="small mute">7 gün sonraki tahmini ${FUELS[fuel].name.toLowerCase()} fiyatı</p>
+    <div style="display:flex;gap:10px;margin:18px 0;flex-wrap:wrap"><span class="tag ${dirTxt[2]}"><i data-lucide="${dirTxt[1]}" class="i" style="width:14px;height:14px"></i>${dirTxt[0]}</span><span class="tag gray">Güven %${F.conf}</span><span class="tag gray">${deltaPlain(F.diff)} ₺ / 7g</span></div>
+    <p class="small mute" style="line-height:1.6">Aralık: <b class="mono" style="color:var(--ink)">${num(a(F.lo.at(-1)))} – ${num(a(F.hi.at(-1)))} ₺</b>. Tahmin son 21 günlük trend ve oynaklıktan üretilir; kesin fiyat garantisi değildir.</p>
+    <a class="btn ghost sm" style="margin-top:14px" href="asistan.html"><i data-lucide="sparkles" class="i"></i>Asistana sor</a>`;
+  lastCsv = C;
+  $('#log').innerHTML = C.length ? C.map(c => `<tr><td>${fmtDate(c.date)}</td><td class="num">${num(c.from)}</td><td class="num">${num(c.to)}</td><td>${deltaHTML(c.diff)}</td></tr>`).join('') : `<tr><td colspan="4" class="empty">Kayıt yok</td></tr>`;
+  icons();
+}
+const deltaPlain = d => (d > 0 ? '+' : '') + num(d);
+
+$('#csv').onclick = () => {
+  const rows = ['tarih,yakit,eski,yeni,fark', ...lastCsv.map(c => `${c.date},${c.fuel},${c.from},${c.to},${c.diff}`)];
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' })), download: `fiyat-degisimleri-${fuel}.csv` });
+  a.click(); toast('CSV indirildi');
+};
+bindChips('fc', f => { fuel = f; render(); }); bindChips('ranges', v => { days = +v; render(); });
+window.addEventListener('citychange', render);
+render();
+</script>
+</body></html>

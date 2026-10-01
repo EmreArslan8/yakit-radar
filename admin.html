@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Paneli | YakıtRadar</title><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#090b0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script><script src="js/charts.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap dash">
+  <aside class="side" id="side">
+    <button class="on" data-t="sum"><i data-lucide="activity" class="i"></i>Özet</button>
+    <button data-t="prices"><i data-lucide="fuel" class="i"></i>Fiyat yönetimi</button>
+    <button data-t="users"><i data-lucide="users" class="i"></i>Kullanıcılar</button>
+    <button data-t="src"><i data-lucide="database" class="i"></i>Veri kaynakları</button>
+    <button data-t="seo"><i data-lucide="search" class="i"></i>SEO</button>
+  </aside>
+  <div>
+    <section class="tab on" id="t-sum"><h1 style="margin-bottom:24px">Özet</h1>
+      <div class="grid g4" id="kpi"></div>
+      <div class="card" style="margin-top:16px"><h3 style="margin-bottom:14px">Son 30 gün ziyaretçi</h3><div class="chart-box" style="height:260px"><canvas id="traffic"></canvas></div></div></section>
+
+    <section class="tab" id="t-prices"><h1 style="margin-bottom:8px">Fiyat yönetimi</h1><p class="mute" style="margin-bottom:20px">İstanbul / Opet referans fiyatı. Kaydedince tüm sitede anında yansır (demo: tarayıcıda).</p>
+      <div class="twrap"><table><thead><tr><th>Yakıt</th><th>API fiyatı</th><th>Manuel fiyat (₺)</th><th></th></tr></thead><tbody id="pRows"></tbody></table></div></section>
+
+    <section class="tab" id="t-users"><h1 style="margin-bottom:24px">Kullanıcılar</h1>
+      <div class="twrap"><table><thead><tr><th>Ad</th><th>E-posta</th><th>Rol</th><th>Kayıt</th><th></th></tr></thead><tbody id="uRows"></tbody></table></div></section>
+
+    <section class="tab" id="t-src"><h1 style="margin-bottom:24px">Veri kaynakları</h1>
+      <div class="card" id="srcList"></div><button class="btn" style="margin-top:16px" id="sync"><i data-lucide="refresh-cw" class="i"></i>Şimdi senkronize et</button></section>
+
+    <section class="tab" id="t-seo"><h1 style="margin-bottom:24px">SEO</h1><div class="grid g2">
+      <div class="card"><h3 style="margin-bottom:10px">Sayfa durumu</h3><div id="seoList"></div></div>
+      <div class="card"><h3 style="margin-bottom:10px">Dosyalar</h3>
+        <div class="item"><span><b>sitemap.xml</b><div class="small mute">Şehir sayfaları dahil</div></span><a class="btn ghost sm" href="sitemap.xml" target="_blank">Aç</a></div>
+        <div class="item"><span><b>robots.txt</b><div class="small mute">Panel ve admin noindex</div></span><a class="btn ghost sm" href="robots.txt" target="_blank">Aç</a></div></div></div></section>
+  </div>
+</main>
+<div id="foot"></div>
+
+<script type="module">
+if (!Auth.require('admin')) throw 0;
+const rnd = seeded(5);
+$('#kpi').innerHTML = [['Kullanıcı', Auth.users().length + 12478, 'users'], ['Bugünkü ziyaret', '8.215', 'eye'], ['Aktif alarm', '3.902', 'bell-ring'], ['API durumu', 'Sağlıklı', 'heart-pulse']]
+  .map(([t, v, i]) => `<div class="card flat stat"><span class="lbl"><i data-lucide="${i}" class="i"></i>${t}</span><b ${t === 'API durumu' ? 'style="color:var(--lime)"' : ''}>${typeof v === 'number' ? v.toLocaleString('tr-TR') : v}</b></div>`).join('');
+const visits = Array.from({ length: 30 }, (_, i) => Math.round(5200 + i * 90 + rnd() * 1800));
+ChartKit.line($('#traffic'), { labels: Array.from({ length: 30 }, (_, i) => dayLabel(29 - i)), legend: false, yFmt: v => Math.round(v).toLocaleString('tr-TR'), series: [{ label: 'Ziyaret', data: visits, color: '#c8ff3d', fill: true }] });
+
+const ov = () => Store.get('override', {});
+function drawPrices() {
+  $('#pRows').innerHTML = FUEL_KEYS.map(k => `<tr><td><span class="dot" style="--c:${FUELS[k].color};display:inline-block;margin-right:8px"></span><b>${FUELS[k].name}</b></td><td class="num">${num(FUELS[k].base)}</td>
+    <td><input style="max-width:130px" type="number" step=".01" data-k="${k}" value="${ov()[k] ?? ''}" placeholder="${num(FUELS[k].base)}"></td>
+    <td><button class="btn sm" data-save="${k}">Kaydet</button> <button class="btn ghost sm" data-reset="${k}">Sıfırla</button></td></tr>`).join('');
+}
+$('#pRows').onclick = e => {
+  const s = e.target.closest('[data-save]')?.dataset.save, r = e.target.closest('[data-reset]')?.dataset.reset, o = ov();
+  if (s) { const v = +$(`[data-k=${s}]`).value; if (!v) return toast('Geçerli fiyat gir'); o[s] = v; Store.set('override', o); toast(FUELS[s].name + ' güncellendi'); }
+  if (r) { delete o[r]; Store.set('override', o); toast('Sıfırlandı'); }
+  if (s || r) drawPrices();
+};
+function drawUsers() {
+  const me = Auth.current().id;
+  $('#uRows').innerHTML = Auth.users().map(u => `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.email)}</td><td><span class="tag ${u.role === 'admin' ? '' : 'gray'}">${u.role === 'admin' ? 'Admin' : 'Üye'}</span></td><td>${fmtDate(u.created)}</td>
+    <td>${u.id === me ? '' : `<button class="btn danger sm" data-del="${u.id}"><i data-lucide="trash-2" class="i"></i>Sil</button>`}</td></tr>`).join(''); icons();
+}
+$('#uRows').onclick = e => { const b = e.target.closest('[data-del]'); if (!b) return; Store.set('users', Auth.users().filter(u => u.id != b.dataset.del)); toast('Kullanıcı silindi'); drawUsers(); };
+
+const SRC = [['Opet fiyat API', 'Benzin · Motorin · LPG', '08:00'], ['EPDK referans', 'Doğrulama', '06:00'], ['PO istasyon listesi', 'İstasyon konumları', 'Dün']];
+function drawSrc() { $('#srcList').innerHTML = SRC.map(([n, d, t], i) => `<div class="item"><div><b>${n}</b><div class="small mute">${d} · son: ${t}</div></div><label class="sw"><input type="checkbox" ${i < 2 ? 'checked' : ''}><span></span></label></div>`).join(''); }
+$('#sync').onclick = () => { $('#sync').disabled = true; setTimeout(() => { $('#sync').disabled = false; toast('Senkronizasyon tamamlandı'); }, 900); };
+$('#seoList').innerHTML = [['Ana sayfa', 'index.html'], ['Karşılaştırma', 'karsilastirma.html'], ['Geçmiş & tahmin', 'gecmis.html'], ...CITIES.slice(0, 4).map(c => [c.n + ' şehir sayfası', 'sehir.html?s=' + c.s])]
+  .map(([n, u]) => `<div class="item"><span>${n}<div class="small mute mono">${u}</div></span><span class="tag">İndeksli</span></div>`).join('');
+
+$('#side').onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('#side button').forEach(x => x.classList.toggle('on', x === b)); $$('.tab').forEach(t => t.classList.toggle('on', t.id === 't-' + b.dataset.t)); };
+drawPrices(); drawUsers(); drawSrc(); icons();
+</script>
+</body></html>

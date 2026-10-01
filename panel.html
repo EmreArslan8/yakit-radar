@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panelim | YakıtRadar</title><meta name="robots" content="noindex"><meta name="theme-color" content="#090b0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap dash">
+  <aside class="side" id="side">
+    <button class="on" data-t="home"><i data-lucide="layout-grid" class="i"></i>Genel bakış</button>
+    <button data-t="alerts"><i data-lucide="bell-ring" class="i"></i>Fiyat alarmları</button>
+    <button data-t="favs"><i data-lucide="star" class="i"></i>Favori şehirler</button>
+    <button data-t="car"><i data-lucide="car" class="i"></i>Aracım</button>
+    <button data-t="settings"><i data-lucide="settings" class="i"></i>Ayarlar</button>
+  </aside>
+  <div>
+    <section class="tab on" id="t-home"><h1 id="hello" style="margin-bottom:6px"></h1><p class="mute" style="margin-bottom:24px">Favorilerin, alarmların ve aylık yakıt tahminin.</p>
+      <div class="grid g3" id="homeStats"></div>
+      <div class="card" style="margin-top:16px"><h3 style="margin-bottom:6px">Favori şehirler</h3><div id="homeFavs"></div></div></section>
+
+    <section class="tab" id="t-alerts"><h1 style="margin-bottom:24px">Fiyat alarmları</h1>
+      <div class="card" style="margin-bottom:16px"><form id="aForm"><div class="grid g4" style="align-items:end">
+        <div><label>Yakıt</label><select id="aFuel">${''}</select></div><div><label>Şehir</label><select id="aCity"></select></div>
+        <div><label>Fiyat (₺)</label><input id="aPrice" type="number" step=".01" required></div><button class="btn"><i data-lucide="plus" class="i"></i>Alarm ekle</button></div></form></div>
+      <div class="card" id="aList"></div></section>
+
+    <section class="tab" id="t-favs"><h1 style="margin-bottom:24px">Favori şehirler</h1><div class="chips" id="favPick"></div></section>
+
+    <section class="tab" id="t-car"><h1 style="margin-bottom:24px">Aracım</h1><div class="grid g2" style="align-items:start">
+      <div class="card"><div class="field"><label>Araç adı</label><input id="cName" placeholder="Örn: Renault Clio"></div>
+        <div class="field"><label>Yakıt</label><select id="cFuel"></select></div>
+        <div class="row"><div class="field"><label>Tüketim (L/100 km)</label><input id="cCons" type="number" step=".1"></div><div class="field"><label>Aylık km</label><input id="cKm" type="number"></div></div>
+        <button class="btn" id="cSave">Kaydet</button></div>
+      <div class="card" id="cOut"></div></div></section>
+
+    <section class="tab" id="t-settings"><h1 style="margin-bottom:24px">Ayarlar</h1><div class="card">
+      <div class="item"><div><b>E-posta bildirimleri</b><div class="small mute">Alarm tetiklenince e-posta gönder.</div></div><label class="sw"><input type="checkbox" data-s="mail" checked><span></span></label></div>
+      <div class="item"><div><b>Haftalık özet</b><div class="small mute">Pazartesi fiyat özeti.</div></div><label class="sw"><input type="checkbox" data-s="weekly"><span></span></label></div>
+      <div class="item"><div><b id="uMail"></b><div class="small mute">Hesap e-postası</div></div><button class="btn danger sm" id="logout"><i data-lucide="log-out" class="i"></i>Çıkış yap</button></div></div></section>
+  </div>
+</main>
+<div id="foot"></div>
+
+<script type="module">
+const user = Auth.require(); if (!user) throw 0;
+const key = k => `${k}:${user.id}`, G = (k, d) => Store.get(key(k), d), S = (k, v) => Store.set(key(k), v);
+const opt = (arr, sel) => arr.map(([v, t]) => `<option value="${v}" ${v === sel ? 'selected' : ''}>${t}</option>`).join('');
+const fuelOpts = sel => opt(FUEL_KEYS.map(k => [k, FUELS[k].name]), sel), cityOpts = sel => opt(CITIES.map(c => [c.n, c.n]), sel);
+let favs = G('favs', ['İstanbul', 'Ankara']), alerts = G('alerts', [{ id: 1, fuel: 'benzin', city: 'İstanbul', price: 57.5 }, { id: 2, fuel: 'lpg', city: 'Ankara', price: 27 }]);
+let car = G('car', { name: 'Aracım', fuel: 'benzin', cons: 6.5, km: 1500 });
+$('#hello').textContent = `Merhaba, ${user.name.split(' ')[0]}`; $('#uMail').textContent = user.email;
+
+const hit = a => priceOf(a.fuel, a.city) <= a.price;
+function drawHome() {
+  const trig = alerts.filter(hit).length, cost = car.km * car.cons / 100 * priceOf(car.fuel, Store.city);
+  $('#homeStats').innerHTML = [['Aktif alarm', alerts.length, 'bell'], ['Tetiklenen', trig, 'bell-ring'], ['Aylık yakıt tahmini', tl(cost), 'wallet']]
+    .map(([t, v, i]) => `<div class="card flat stat"><span class="lbl"><i data-lucide="${i}" class="i"></i>${t}</span><b>${v}</b></div>`).join('');
+  $('#homeFavs').innerHTML = favs.length ? favs.map(c => `<div class="item"><a href="sehir.html?s=${cityByName(c).s}"><b>${c}</b></a><span class="mono">${FUEL_KEYS.map(f => `<span style="color:${FUELS[f].color}">${num(priceOf(f, c))}</span>`).join(' · ')}</span></div>`).join('') : '<div class="empty">Henüz favori yok.</div>';
+}
+function drawAlerts() {
+  $('#aList').innerHTML = alerts.length ? alerts.map(a => `<div class="item"><div><b>${FUELS[a.fuel].name}</b> · ${a.city}<div class="small mute">Hedef: ≤ <span class="mono">${tl(a.price)}</span> · şu an <span class="mono">${tl(priceOf(a.fuel, a.city))}</span></div></div>
+    <div style="display:flex;gap:10px;align-items:center">${hit(a) ? '<span class="tag">Tetiklendi</span>' : '<span class="tag gray">Bekliyor</span>'}<button class="btn danger sm" data-del="${a.id}" aria-label="Sil"><i data-lucide="trash-2" class="i"></i></button></div></div>`).join('') : '<div class="empty">Alarm yok. Yukarıdan ekle.</div>';
+}
+function drawFavs() { $('#favPick').innerHTML = CITIES.map(c => `<button class="chip ${favs.includes(c.n) ? 'on' : ''}" data-c="${c.n}"><i data-lucide="star" class="i" style="width:14px;height:14px"></i>${c.n}</button>`).join(''); }
+function drawCar() {
+  const p = priceOf(car.fuel, Store.city), L = car.km * car.cons / 100;
+  $('#cOut').innerHTML = `<span class="eyebrow">Aylık tahmin · ${Store.city}</span><div class="mono" style="font-size:2.6rem;color:var(--lime);margin:12px 0">${tl(L * p)}</div>
+    <div class="item"><span class="mute">Litre</span><b class="mono">${L.toFixed(1)} L</b></div><div class="item"><span class="mute">100 km maliyeti</span><b class="mono">${tl(car.cons * p)}</b></div><div class="item"><span class="mute">Yıllık</span><b class="mono">${tl(L * p * 12)}</b></div>`;
+}
+const all = () => { drawHome(); drawAlerts(); drawFavs(); drawCar(); icons(); };
+
+$('#aFuel').innerHTML = fuelOpts('benzin'); $('#aCity').innerHTML = cityOpts(Store.city); $('#cFuel').innerHTML = fuelOpts(car.fuel);
+$('#cName').value = car.name; $('#cCons').value = car.cons; $('#cKm').value = car.km;
+$('#side').onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('#side button').forEach(x => x.classList.toggle('on', x === b)); $$('.tab').forEach(t => t.classList.toggle('on', t.id === 't-' + b.dataset.t)); };
+$('#aForm').onsubmit = e => { e.preventDefault(); const price = +$('#aPrice').value; if (!price) return toast('Geçerli bir fiyat gir');
+  alerts = [...alerts, { id: Date.now(), fuel: $('#aFuel').value, city: $('#aCity').value, price }]; S('alerts', alerts); $('#aPrice').value = ''; toast('Alarm eklendi'); all(); };
+$('#aList').onclick = e => { const b = e.target.closest('[data-del]'); if (!b) return; alerts = alerts.filter(a => a.id != b.dataset.del); S('alerts', alerts); all(); };
+$('#favPick').onclick = e => { const b = e.target.closest('[data-c]'); if (!b) return; const c = b.dataset.c; favs = favs.includes(c) ? favs.filter(x => x !== c) : [...favs, c]; S('favs', favs); all(); };
+$('#cSave').onclick = () => { car = { name: $('#cName').value || 'Aracım', fuel: $('#cFuel').value, cons: +$('#cCons').value || 6.5, km: +$('#cKm').value || 0 }; S('car', car); toast('Kaydedildi'); all(); };
+$$('[data-s]').forEach(i => { i.checked = G('set:' + i.dataset.s, i.checked); i.onchange = () => { S('set:' + i.dataset.s, i.checked); toast('Ayar güncellendi'); }; });
+$('#logout').onclick = () => { Auth.logout(); location.href = 'index.html'; };
+window.addEventListener('citychange', all);
+all();
+</script>
+</body></html>

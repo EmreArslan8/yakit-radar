@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Şehir Akaryakıt Fiyatları | YakıtRadar</title>
+<meta name="description" content="Şehre özel güncel benzin, motorin ve LPG fiyatları, istasyon karşılaştırması ve 30 günlük grafik.">
+<meta name="theme-color" content="#090b0a"><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script><script src="js/charts.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap">
+  <header class="section" style="padding-bottom:20px">
+    <a class="small mute" href="karsilastirma.html" style="display:inline-flex;gap:6px;align-items:center"><i data-lucide="arrow-left" class="i"></i>Tüm şehirler</a>
+    <h1 style="margin:14px 0 10px" id="h1">—</h1>
+    <p class="mute" id="lead"></p>
+  </header>
+  <div class="grid g3" id="cards"></div>
+  <section class="section" style="padding-bottom:0"><div class="grid g2" style="align-items:start">
+    <div class="card"><div class="sec-head" style="margin-bottom:14px"><h2>30 günlük benzin</h2></div><div class="chart-box" style="height:280px"><canvas id="chart"></canvas></div></div>
+    <div><h2 style="margin-bottom:14px">Markalara göre</h2><div class="twrap"><table><thead><tr><th>Marka</th><th>Benzin</th><th>Motorin</th><th>LPG</th></tr></thead><tbody id="brands"></tbody></table></div></div>
+  </div></section>
+  <section class="section"><h2 style="margin-bottom:14px">Diğer şehirler</h2><div class="chips" id="others"></div></section>
+</main>
+<div id="foot"></div>
+
+<script type="module">
+const c = cityBySlug(new URLSearchParams(location.search).get('s')) || cityByName(Store.city);
+document.title = `${c.n} Benzin, Motorin, LPG Fiyatları | YakıtRadar`;
+$('#h1').textContent = `${c.n} akaryakıt fiyatları`;
+$('#lead').textContent = `${c.n} için güncel benzin, motorin ve LPG fiyatları, marka karşılaştırması ve fiyat grafiği.`;
+const ld = document.createElement('script'); ld.type = 'application/ld+json';
+ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Fiyatlar', item: 'https://yakitradar.example/' }, { '@type': 'ListItem', position: 2, name: c.n }] });
+document.head.append(ld);
+
+const [P, H, B] = await Promise.all([API.prices(c.n), API.history('benzin', 30), API.brands(c.n)]);
+$('#cards').innerHTML = FUEL_KEYS.map(k => `<div class="card pc rv" style="--c:${FUELS[k].color}"><div class="hd"><span>${FUELS[k].name}</span><i data-lucide="${FUELS[k].icon}" class="i" style="color:${FUELS[k].color}"></i></div>
+  <div class="big">${num(P[k].price)}<small>₺/L</small></div>${deltaHTML(P[k].diff)}</div>`).join('');
+const off = c.o;
+ChartKit.line($('#chart'), { labels: H.labels, legend: false, yFmt: v => v.toFixed(2) + ' ₺', series: [{ label: 'Benzin 95', data: H.values.map(v => +(v + off).toFixed(2)), color: FUELS.benzin.color, fill: true, step: true }] });
+const best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...B.map(b => b[f]))]));
+$('#brands').innerHTML = B.map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num">${num(b[f])}${b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">●</span>' : ''}</td>`).join('')}</tr>`).join('');
+$('#others').innerHTML = CITIES.filter(x => x.s !== c.s).map(x => `<a class="chip" href="sehir.html?s=${x.s}">${x.n}</a>`).join('');
+icons(); reveal();
+</script>
+</body></html>

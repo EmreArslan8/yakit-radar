@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Şehir ve İstasyon Akaryakıt Fiyat Karşılaştırma | YakıtRadar</title>
+<meta name="description" content="Benzin, motorin ve LPG fiyatlarını şehir ve istasyon markasına göre karşılaştırın. İki şehir arasındaki farkı ve yıllık tasarrufu görün.">
+<meta name="theme-color" content="#090b0a"><meta property="og:title" content="Akaryakıt fiyat karşılaştırma"><meta property="og:type" content="website">
+<link rel="canonical" href="https://yakitradar.example/karsilastirma.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script>
+</head><body>
+<div id="nav"></div>
+<main class="wrap">
+  <header class="section" style="padding-bottom:20px">
+    <span class="eyebrow"><i data-lucide="scale" class="i"></i>Karşılaştırma</span>
+    <h1 style="margin:12px 0 10px">Nerede doldurmak<br>daha ucuz?</h1>
+    <p class="mute" style="max-width:520px">Şehirleri, istasyon markalarını ve yakın istasyonları tek yerden karşılaştır.</p>
+  </header>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;margin-bottom:20px">
+    <div class="chips" id="mode"><button class="chip on" data-v="cities">Şehirler</button><button class="chip" data-v="brands">Markalar</button><button class="chip" data-v="stations">Yakın istasyonlar</button><button class="chip" data-v="vs">İki şehir</button></div>
+    <div id="fuelBox"></div>
+  </div>
+
+  <section id="v-cities"><div class="card rv"><div class="bars" id="cityBars"></div></div></section>
+
+  <section id="v-brands" hidden><div class="twrap"><table><thead><tr><th>Marka</th><th>Benzin 95</th><th>Motorin</th><th>LPG</th></tr></thead><tbody id="brandRows"></tbody></table></div>
+    <p class="small mute" style="margin-top:12px" id="brandNote"></p></section>
+
+  <section id="v-stations" hidden><div class="twrap"><table><thead><tr><th>İstasyon</th><th>Uzaklık</th><th>Benzin</th><th>Motorin</th><th>LPG</th><th></th></tr></thead><tbody id="stRows"></tbody></table></div></section>
+
+  <section id="v-vs" hidden>
+    <div class="card"><div class="row" style="align-items:end"><div class="field" style="margin:0"><label>Şehir A</label><select id="vsA"></select></div><div class="field" style="margin:0"><label>Şehir B</label><select id="vsB"></select></div></div>
+      <div class="row" style="margin-top:16px"><div class="field" style="margin:0"><label>Yıllık tüketim (litre)</label><input id="vsL" type="number" value="1200" min="0"></div></div>
+      <div class="grid g3" id="vsOut" style="margin-top:22px"></div></div>
+  </section>
+</main>
+<div id="foot"></div>
+
+<script type="module">
+let mode = 'cities', fuel = 'benzin';
+$('#fuelBox').innerHTML = fuelChips(fuel, 'fc');
+$('#vsA').innerHTML = $('#vsB').innerHTML = CITIES.map(c => `<option>${c.n}</option>`).join('');
+$('#vsA').value = 'İstanbul'; $('#vsB').value = 'Konya';
+
+async function drawCities() {
+  const R = await API.ranking(fuel), min = R[0].price, max = R.at(-1).price, color = FUELS[fuel].color;
+  $('#cityBars').innerHTML = R.map((r, i) => `<div class="bar ${r.city === Store.city ? 'me' : ''}" style="--c:${color}"><a href="sehir.html?s=${r.slug}">${i + 1}. ${r.city}</a>
+    <div class="tr"><div class="fl" data-w="${35 + (r.price - min) / ((max - min) || 1) * 65}"></div></div>
+    <div class="v">${tl(r.price)}${i === 0 ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</div></div>`).join('');
+  requestAnimationFrame(() => $$('.fl').forEach(f => f.style.width = f.dataset.w + '%'));
+}
+async function drawBrands() {
+  const B = await API.brands(Store.city), best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...B.map(b => b[f]))]));
+  $('#brandRows').innerHTML = B.sort((a, b) => a[fuel] - b[fuel]).map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--lime)"' : ''}>${tl(b[f])}${b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}</tr>`).join('');
+  $('#brandNote').textContent = `${Store.city} için marka bazlı referans fiyatlar. Seçili yakıta göre sıralı.`;
+}
+async function drawStations() {
+  const S = await API.stations(Store.city), best = Math.min(...S.map(s => s[fuel]));
+  $('#stRows').innerHTML = S.map(s => `<tr><td><b>${s.brand}</b> <span class="mute">${s.district}</span></td><td class="num">${s.km} km</td>
+    ${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--lime)"' : ''}>${num(s[f])}${f === fuel && s[f] === best ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}
+    <td><a class="btn ghost sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${encodeURIComponent(s.q)}"><i data-lucide="navigation" class="i"></i>Yol tarifi</a></td></tr>`).join('');
+  icons();
+}
+function drawVs() {
+  const a = $('#vsA').value, b = $('#vsB').value, L = +$('#vsL').value || 0;
+  $('#vsOut').innerHTML = FUEL_KEYS.map(f => { const pa = priceOf(f, a), pb = priceOf(f, b), d = pa - pb, yr = Math.abs(d) * L;
+    return `<div class="card flat stat"><span class="lbl"><span class="dot" style="--c:${FUELS[f].color}"></span>${FUELS[f].short}</span>
+      <div class="mono" style="margin-top:12px;display:flex;justify-content:space-between"><span>${a}<br><b style="font-size:1.4rem;display:inline">${num(pa)}</b></span><span style="text-align:right">${b}<br><b style="font-size:1.4rem;display:inline">${num(pb)}</b></span></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)" class="small">${Math.abs(d) < .005 ? 'Fark yok.' : `<b style="color:var(--lime)">${d > 0 ? b : a}</b> ${num(Math.abs(d))} ₺/L daha ucuz → yılda <b class="mono">${tl(yr)}</b>`}</div></div>`; }).join('');
+}
+function show() {
+  $$('main > section').forEach(s => s.hidden = s.id !== 'v-' + mode);
+  $('#fuelBox').style.display = mode === 'vs' ? 'none' : '';
+  ({ cities: drawCities, brands: drawBrands, stations: drawStations, vs: drawVs })[mode](); reveal();
+}
+bindChips('mode', v => { mode = v; show(); });
+bindChips('fc', f => { fuel = f; show(); });
+['vsA', 'vsB', 'vsL'].forEach(id => $('#' + id).oninput = drawVs);
+window.addEventListener('citychange', show);
+show(); icons();
+</script>
+</body></html>

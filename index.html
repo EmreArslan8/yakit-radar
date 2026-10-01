@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Güncel Benzin, Motorin ve LPG Fiyatları | YakıtRadar</title>
+<meta name="description" content="Türkiye'nin güncel benzin, motorin ve LPG fiyatları. Şehir ve istasyon karşılaştırması, yakıt maliyeti hesaplama, fiyat geçmişi ve AI fiyat tahmini.">
+<meta name="theme-color" content="#090b0a">
+<meta property="og:title" content="YakıtRadar — Güncel akaryakıt fiyatları"><meta property="og:description" content="Şehir bazlı fiyatlar, geçmiş grafikleri ve AI tahmin."><meta property="og:type" content="website">
+<link rel="canonical" href="https://yakitradar.example/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="js/store.js"></script><script src="js/data.js"></script><script src="js/ui.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"YakıtRadar","url":"https://yakitradar.example/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Akaryakıt fiyatları ne sıklıkla güncellenir?","acceptedAnswer":{"@type":"Answer","text":"Fiyatlar kaynak API'lerden gün içinde birkaç kez güncellenir."}},
+{"@type":"Question","name":"Hangi şehir en ucuz?","acceptedAnswer":{"@type":"Answer","text":"Şehir karşılaştırma tablosunda seçtiğiniz yakıta göre en ucuz şehirleri görebilirsiniz."}}]}</script>
+</head><body>
+<div id="nav"></div>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <span class="eyebrow"><i data-lucide="radio" class="i"></i>Türkiye · canlı fiyat takibi</span>
+      <h1>Depoyu doldurmadan <em>önce</em> bak.</h1>
+      <p class="lead">Benzin, motorin ve LPG fiyatlarını şehir ve istasyon bazında karşılaştır. Geçmişi gör, yarının fiyatını AI ile öngör.</p>
+      <div class="hero-cta">
+        <a class="btn" href="karsilastirma.html"><i data-lucide="scale" class="i"></i>Fiyatları karşılaştır</a>
+        <a class="btn ghost" href="gecmis.html"><i data-lucide="sparkles" class="i"></i>AI tahmini gör</a>
+      </div>
+    </div>
+    <div class="pump" id="pump"></div>
+  </section>
+
+  <section class="section" style="padding-top:24px">
+    <div class="sec-head"><div><span class="eyebrow">Bugünkü fiyatlar</span><h2 style="margin-top:10px" id="cardsTitle">—</h2></div>
+      <a class="btn ghost sm" href="gecmis.html">Tüm grafikler <i data-lucide="arrow-right" class="i"></i></a></div>
+    <div class="grid g3" id="cards"></div>
+  </section>
+
+  <section class="section" style="padding-top:8px">
+    <div class="grid g2">
+      <div class="card rv">
+        <span class="eyebrow"><i data-lucide="calculator" class="i"></i>Maliyet hesaplayıcı</span>
+        <h2 style="margin:10px 0 22px">Yolculuğun kaça mal olur?</h2>
+        <div class="field"><label>Yakıt</label><div id="calcFuel"></div></div>
+        <div class="field"><label>Mesafe · <b id="kmOut" class="mono" style="color:var(--ink)">450</b> km</label><input id="km" type="range" min="20" max="2000" step="10" value="450"></div>
+        <div class="row"><div class="field"><label>Tüketim (L/100 km)</label><input id="cons" type="number" step=".1" min="1" value="6.5"></div>
+          <div class="field"><label>Yolcu sayısı</label><input id="ppl" type="number" min="1" max="8" value="2"></div></div>
+        <div class="calc-out"><span class="small mute">Tahmini yakıt masrafı</span><b id="cTotal">—</b>
+          <div class="mini"><div>Yakıt<strong id="cL">—</strong></div><div>100 km'de<strong id="c100">—</strong></div><div>Kişi başı<strong id="cPp">—</strong></div></div></div>
+      </div>
+      <div class="card rv">
+        <div class="sec-head" style="margin-bottom:14px"><div><span class="eyebrow"><i data-lucide="trophy" class="i"></i>Şehir sıralaması</span><h2 style="margin-top:10px">En uygun şehirler</h2></div></div>
+        <div id="rankFuel" style="margin-bottom:16px"></div><div class="bars" id="rank"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:8px">
+    <div class="sec-head"><div><span class="eyebrow"><i data-lucide="history" class="i"></i>Fiyat hareketleri</span><h2 style="margin-top:10px">Son zam ve indirimler</h2></div></div>
+    <div class="twrap rv"><table><thead><tr><th>Tarih</th><th>Yakıt</th><th>Eski</th><th>Yeni</th><th>Değişim</th></tr></thead><tbody id="changes"></tbody></table></div>
+  </section>
+
+  <section class="section" style="padding-top:8px">
+    <div class="grid g4">
+      <div class="card flat rv"><i data-lucide="map-pinned" class="i" style="color:var(--lime)"></i><h3 style="margin:14px 0 6px">Şehir & istasyon</h3><p class="small mute">15 şehir, 6 büyük marka.</p></div>
+      <div class="card flat rv"><i data-lucide="brain-circuit" class="i" style="color:var(--lime)"></i><h3 style="margin:14px 0 6px">AI fiyat tahmini</h3><p class="small mute">7 günlük öngörü ve güven aralığı.</p></div>
+      <div class="card flat rv"><i data-lucide="bell-ring" class="i" style="color:var(--lime)"></i><h3 style="margin:14px 0 6px">Fiyat alarmı</h3><p class="small mute">Hedef fiyata inince haber al.</p></div>
+      <div class="card flat rv"><i data-lucide="bot" class="i" style="color:var(--lime)"></i><h3 style="margin:14px 0 6px">AI asistan</h3><p class="small mute">Sorularını doğal dille sor.</p></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:8px;max-width:820px">
+    <span class="eyebrow">SSS</span><h2 style="margin:10px 0 18px">Sık sorulan sorular</h2>
+    <details><summary>Fiyatlar ne sıklıkla güncellenir?</summary><p>Fiyatlar kaynak API'lerden gün içinde birkaç kez güncellenir; zam ve indirimler anında yansıtılır.</p></details>
+    <details><summary>Fiyatlar istasyondaki ile aynı mı?</summary><p>Fiyatlar il ortalaması ve marka referansına dayanır. İlçe ve istasyona göre küçük farklar olabilir.</p></details>
+    <details><summary>AI tahmin ne kadar güvenilir?</summary><p>Tahmin geçmiş fiyat trendinden üretilir ve güven aralığıyla gösterilir. Yatırım veya kesin fiyat garantisi değildir.</p></details>
+    <details><summary>Fiyat alarmı nasıl kurulur?</summary><p>Ücretsiz üye olun, panelinizden yakıt, şehir ve hedef fiyatı seçin.</p></details>
+  </section>
+</main>
+<div id="foot"></div>
+
+<script type="module">
+let calcFuel = 'benzin', rankFuel = 'benzin';
+
+async function render() {
+  const city = Store.city, P = await API.prices(city);
+  $('#pump').innerHTML = `<div class="tot"><div class="tot-logo"><span class="tot-mark"><i data-lucide="gauge" class="i"></i></span><span class="tot-name">YakıtRadar</span><span class="tot-city">${city} · ₺ / litre</span></div>` +
+    FUEL_KEYS.map(k => `<div class="brd-row" style="--c:${FUELS[k].color}"><div class="brd-name">${FUELS[k].name}${deltaHTML(P[k].diff)}</div>
+      <div class="brd-led"><span class="ghost">88,88</span><span class="on" data-count="${P[k].price}">${num(P[k].price)}</span></div></div>`).join('') +
+    `<div class="tot-svc green">Market <b>24</b> Saat</div><div class="tot-svc blue">Oto Yıkama</div><div class="tot-svc gold">Kafe & Dinlenme</div></div>`;
+$$('[data-count]').forEach(el => countUp(el, +el.dataset.count));
+  $('#cardsTitle').textContent = `${city} akaryakıt fiyatları`;
+  const H = await Promise.all(FUEL_KEYS.map(k => API.history(k, 30)));
+  $('#cards').innerHTML = FUEL_KEYS.map((k, i) => { const v = H[i].values;
+    return `<a class="card pc rv" href="gecmis.html?f=${k}" style="--c:${FUELS[k].color}"><div class="hd"><span>${FUELS[k].name}</span><i data-lucide="${FUELS[k].icon}" class="i" style="color:${FUELS[k].color}"></i></div>
+      <div class="big">${num(P[k].price)}<small>₺/L</small></div>${deltaHTML(P[k].diff)} <span class="small mute">· son değişim ${P[k].age || 'bugün'}${P[k].age ? ' gün önce' : ''}</span>
+      ${spark(v, FUELS[k].color)}<div class="mm"><span>30g min ${num(Math.min(...v))}</span><span>maks ${num(Math.max(...v))}</span></div></a>`; }).join('');
+  calc(); drawRank(); icons(); reveal();
+}
+
+async function calc() {
+  const p = priceOf(calcFuel, Store.city), km = +$('#km').value, c = +$('#cons').value || 0, n = Math.max(1, +$('#ppl').value || 1), l = km * c / 100;
+  $('#kmOut').textContent = km; $('#cTotal').textContent = tl(l * p);
+  $('#cL').textContent = l.toFixed(1) + ' L'; $('#c100').textContent = tl(c * p); $('#cPp').textContent = tl(l * p / n);
+}
+async function drawRank() {
+  const R = await API.ranking(rankFuel), max = R.at(-1).price, min = R[0].price, cur = Store.city, color = FUELS[rankFuel].color;
+  const show = R.slice(0, 7); if (!show.some(r => r.city === cur)) show.push(R.find(r => r.city === cur));
+  $('#rank').innerHTML = show.map((r, i) => `<div class="bar ${r.city === cur ? 'me' : ''}" style="--c:${color}"><a href="sehir.html?s=${r.slug}">${R.indexOf(r) + 1}. ${r.city}</a>
+    <div class="tr"><div class="fl" data-w="${40 + (r.price - min) / ((max - min) || 1) * 60}"></div></div><div class="v">${tl(r.price)}</div></div>`).join('');
+  requestAnimationFrame(() => $$('.fl').forEach(f => f.style.width = f.dataset.w + '%'));
+}
+async function drawChanges() {
+  const C = await API.changes(null, 7);
+  $('#changes').innerHTML = C.map(c => `<tr><td>${fmtDate(c.date)}</td><td><span class="dot" style="--c:${FUELS[c.fuel].color};display:inline-block;margin-right:8px"></span>${FUELS[c.fuel].name}</td>
+    <td class="num">${tl(c.from)}</td><td class="num">${tl(c.to)}</td><td>${deltaHTML(c.diff)} <span class="tag ${c.diff > 0 ? 'red' : ''}" style="margin-left:8px">${c.diff > 0 ? 'Zam' : 'İndirim'}</span></td></tr>`).join('');
+  icons();
+}
+
+$('#ticker').innerHTML = [0, 1].map(() => CITIES.map(c => `<span>${c.n} <b>${num(priceOf('benzin', c.n))}</b></span>`).join('')).join('');
+$('#calcFuel').innerHTML = fuelChips(calcFuel, 'cf'); $('#rankFuel').innerHTML = fuelChips(rankFuel, 'rf');
+bindChips('cf', f => { calcFuel = f; calc(); }); bindChips('rf', f => { rankFuel = f; drawRank(); });
+['km', 'cons', 'ppl'].forEach(id => $('#' + id).oninput = calc);
+window.addEventListener('citychange', render);
+render(); drawChanges();
+</script>
+</body></html>
