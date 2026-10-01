@@ -31,6 +31,7 @@
         <a class="btn" href="karsilastirma.html"><i data-lucide="scale" class="i"></i>Fiyatları karşılaştır</a>
         <a class="btn ghost" href="gecmis.html"><i data-lucide="sparkles" class="i"></i>AI tahmini gör</a>
       </div>
+      <p class="small mute" id="srcInfo" style="margin-top:22px"></p>
     </div>
     <div class="pump" id="pump"></div>
   </section>
@@ -61,7 +62,7 @@
   </section>
 
   <section class="section" style="padding-top:8px">
-    <div class="sec-head"><div><span class="eyebrow"><i data-lucide="history" class="i"></i>Fiyat hareketleri</span><h2 style="margin-top:10px">Son zam ve indirimler</h2></div></div>
+    <div class="sec-head"><div><span class="eyebrow"><i data-lucide="history" class="i"></i>Fiyat hareketleri</span><h2 style="margin-top:10px">Son zam ve indirimler</h2><p>Geçmiş kayıtlar şimdilik örnek veridir; günlük fiyat kaydı biriktikçe gerçeğe dönüşür.</p></div></div>
     <div class="twrap rv"><table><thead><tr><th>Tarih</th><th>Yakıt</th><th>Eski</th><th>Yeni</th><th>Değişim</th></tr></thead><tbody id="changes"></tbody></table></div>
   </section>
 
@@ -85,20 +86,20 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 let calcFuel = 'benzin', rankFuel = 'benzin';
 
 async function render() {
   const city = Store.city, P = await API.prices(city);
-  $('#pump').innerHTML = `<div class="tot"><div class="tot-logo"><span class="tot-mark"><i data-lucide="gauge" class="i"></i></span><span class="tot-name">YakıtRadar</span><span class="tot-city">${city} · ₺ / litre</span></div>` +
-    FUEL_KEYS.map(k => `<div class="brd-row" style="--c:${FUELS[k].color}"><div class="brd-name">${FUELS[k].name}${deltaHTML(P[k].diff)}</div>
-      <div class="brd-led"><span class="ghost">88,88</span><span class="on" data-count="${P[k].price}">${num(P[k].price)}</span></div></div>`).join('') +
-    `<div class="tot-svc green">Market <b>24</b> Saat</div><div class="tot-svc blue">Oto Yıkama</div><div class="tot-svc gold">Kafe & Dinlenme</div></div>`;
+  const SUB = { benzin: ['Kurşunsuz 95 Oktan', 'Benzin'], motorin: ['Euro Diesel', 'Motorin'], lpg: ['Otogaz AutoGas', 'LPG'] }, dot = v => num(v).replace(',', '.');
+  $('#pump').innerHTML = `<div class="brd">` + FUEL_KEYS.map(k => `<div class="brd-row"><div class="brd-name"><small>${SUB[k][0]}</small>${SUB[k][1]}</div>
+      <div class="brd-led"><span class="ghost">88.88</span><span class="on" data-dot="1" data-count="${P[k].price}">${dot(P[k].price)}</span></div></div>`).join('') + `</div>`;
 $$('[data-count]').forEach(el => countUp(el, +el.dataset.count));
   $('#cardsTitle').textContent = `${city} akaryakıt fiyatları`;
   const H = await Promise.all(FUEL_KEYS.map(k => API.history(k, 30)));
   $('#cards').innerHTML = FUEL_KEYS.map((k, i) => { const v = H[i].values;
     return `<a class="card pc rv" href="gecmis.html?f=${k}" style="--c:${FUELS[k].color}"><div class="hd"><span>${FUELS[k].name}</span><i data-lucide="${FUELS[k].icon}" class="i" style="color:${FUELS[k].color}"></i></div>
-      <div class="big">${num(P[k].price)}<small>₺/L</small></div>${deltaHTML(P[k].diff)} <span class="small mute">· son değişim ${P[k].age || 'bugün'}${P[k].age ? ' gün önce' : ''}</span>
+      <div class="big">${num(P[k].price)}<small>₺/L</small></div>${deltaHTML(P[k].diff)}
       ${spark(v, FUELS[k].color)}<div class="mm"><span>30g min ${num(Math.min(...v))}</span><span>maks ${num(Math.max(...v))}</span></div></a>`; }).join('');
   calc(); drawRank(); icons(); reveal();
 }
@@ -126,6 +127,8 @@ $('#ticker').innerHTML = [0, 1].map(() => CITIES.map(c => `<span>${c.n} <b>${num
 $('#calcFuel').innerHTML = fuelChips(calcFuel, 'cf'); $('#rankFuel').innerHTML = fuelChips(rankFuel, 'rf');
 bindChips('cf', f => { calcFuel = f; calc(); }); bindChips('rf', f => { rankFuel = f; drawRank(); });
 ['km', 'cons', 'ppl'].forEach(id => $('#' + id).oninput = calc);
+const info = await API.info();
+if (info) $('#srcInfo').innerHTML = `<i data-lucide="database" class="i" style="vertical-align:-4px;margin-right:6px"></i>Kaynak: ${info.sources.join(' · ')} · güncelleme ${new Date(info.updatedAt).toLocaleString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}`;
 window.addEventListener('citychange', render);
 render(); drawChanges();
 </script>

@@ -31,6 +31,7 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 const norm = t => t.toLocaleLowerCase('tr').replace(/[?!.,]/g, '');
 const QUICK = ['Benzin kaç lira?', 'En ucuz şehir hangisi?', 'Yarın zam gelecek mi?', 'LPG mi benzin mi?', '450 km yolculuk kaça mal olur?', 'İzmir ile Ankara karşılaştır'];
 $('#quick').innerHTML = QUICK.map(q => `<button class="chip" style="justify-content:flex-start;text-align:left">${q}</button>`).join('');
@@ -51,7 +52,7 @@ async function answer(raw) {
   if (cities.length >= 2) { const [a, b] = cities; return `${FUELS[f].name}: <b>${a.n}</b> ${tl(priceOf(f, a.n))} · <b>${b.n}</b> ${tl(priceOf(f, b.n))}.<br>Fark: <b class="mono" style="color:var(--accent)">${num(Math.abs(priceOf(f, a.n) - priceOf(f, b.n)))} ₺/L</b> (${priceOf(f, a.n) < priceOf(f, b.n) ? a.n : b.n} daha ucuz).`; }
   if (t.includes('lpg') && t.includes('benzin')) { const b = priceOf('benzin', city) * 7, l = priceOf('lpg', city) * 9; return `100 km'de (7 L benzin / 9 L LPG): benzin <b class="mono">${tl(b)}</b>, LPG <b class="mono">${tl(l)}</b>. LPG yaklaşık <b style="color:var(--accent)">%${Math.round((1 - l / b) * 100)}</b> daha ucuz; dönüşüm maliyetini unutma.`; }
   if (/ucuz|en düşük|pahalı/.test(t)) { const R = await API.ranking(f), pick = t.includes('pahalı') ? R.at(-1) : R[0]; return `${FUELS[f].name} için ${t.includes('pahalı') ? 'en pahalı' : 'en ucuz'} şehir <b>${pick.city}</b>: <b class="mono" style="color:var(--accent)">${tl(pick.price)}</b>.` + pills(R.slice(0, 3).map(r => [`${r.city} ${num(r.price)}`])); }
-  if (/marka|istasyon|opet|shell|bp|aytemiz|petrol ofisi/.test(t)) { const B = (await API.brands(city)).sort((a, b) => a[f] - b[f]); return `${city} ${FUELS[f].name} fiyatlarında en uygun marka <b>${B[0].name}</b> (${tl(B[0][f])}).` + pills(B.slice(0, 4).map(b => [`${b.name} ${num(b[f])}`])); }
+  if (/marka|istasyon|opet|shell|bp|aytemiz|petrol ofisi/.test(t)) { const B = (await API.brands(city)).filter(b => b[f] != null).sort((a, b) => a[f] - b[f]); return `${city} ${FUELS[f].name} fiyatlarında en uygun marka <b>${B[0].name}</b> (${tl(B[0][f])}).` + pills(B.slice(0, 4).map(b => [`${b.name} ${num(b[f])}`])); }
   if (/kaç|fiyat|ne kadar|benzin|motorin|lpg|dizel/.test(t)) { const P = await API.prices(city); return `${city} güncel fiyatlar:` + `<div style="margin-top:8px;display:grid;gap:6px">${FUEL_KEYS.map(k => `<div style="display:flex;justify-content:space-between;gap:20px"><span><span class="dot" style="--c:${FUELS[k].color};display:inline-block;margin-right:8px"></span>${FUELS[k].name}</span><b class="mono">${tl(P[k].price)}</b></div>`).join('')}</div>`; }
   return 'Bunu tam anlayamadım. Şunları sorabilirsin: <i>“Ankara’da benzin kaç lira?”</i>, <i>“yarın zam var mı?”</i>, <i>“300 km kaça mal olur?”</i>.';
 }

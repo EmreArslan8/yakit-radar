@@ -26,6 +26,7 @@
   </div>
 
   <div class="card"><div class="chart-box"><canvas id="chart"></canvas></div></div>
+  <p class="small mute" style="margin-top:10px">Güncel fiyat gerçektir. Geçmiş seri ve AI tahmin şimdilik örnek veridir; günlük kayıt biriktikçe gerçek veriye dönüşecek.</p>
 
   <div class="grid g4" id="stats" style="margin-top:16px"></div>
 
@@ -42,6 +43,7 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 const qp = new URLSearchParams(location.search);
 let fuel = FUELS[qp.get('f')] ? qp.get('f') : 'benzin', days = 30, chart, lastCsv = [];
 $('#fuelBox').innerHTML = fuelChips(fuel, 'fc');

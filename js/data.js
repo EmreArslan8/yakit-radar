@@ -1,33 +1,47 @@
-// VERİ KATMANI — sayfalar yalnızca API.* kullanır. Gerçek entegrasyonda sadece bu dosya değişir.
+// VERİ KATMANI — sayfalar yalnızca API.* kullanır. Gerçek fiyatlar data/prices.json'dan gelir
+// (scripts/fetch-prices.mjs üretir). Geçmiş serisi ve tahmin henüz örnek veridir.
 const FUELS = {
-  benzin:  { key: 'benzin',  name: 'Benzin 95', short: 'Benzin', base: 58.42, color: '#ff6b4a', icon: 'fuel' },
-  motorin: { key: 'motorin', name: 'Motorin',   short: 'Motorin', base: 56.18, color: '#4db2ff', icon: 'droplets' },
-  lpg:     { key: 'lpg',     name: 'LPG',       short: 'LPG', base: 27.35, color: '#3ddc97', icon: 'flame' },
+  benzin:  { key: 'benzin',  name: 'Benzin 95', short: 'Benzin', base: 84.5, color: '#ff6b4a', icon: 'fuel' },
+  motorin: { key: 'motorin', name: 'Motorin',   short: 'Motorin', base: 97.1, color: '#4db2ff', icon: 'droplets' },
+  lpg:     { key: 'lpg',     name: 'LPG',       short: 'LPG', base: 36.4, color: '#3ddc97', icon: 'flame' },
 };
 const FUEL_KEYS = Object.keys(FUELS);
-const CITIES = [
-  ['İstanbul', 0], ['Ankara', -.35], ['İzmir', -.2], ['Bursa', -.25], ['Antalya', .1], ['Adana', -.3], ['Konya', -.5],
-  ['Gaziantep', -.35], ['Kayseri', -.45], ['Eskişehir', -.4], ['Trabzon', .25], ['Samsun', -.1], ['Diyarbakır', .15],
-  ['Mersin', -.15], ['Muğla', .2],
-].map(([n, o]) => ({ n, o, s: slug(n) }));
-const BRANDS = [['Opet', 0], ['Petrol Ofisi', .3], ['BP', .4], ['Shell', .55], ['Total', .15], ['Aytemiz', -.25]]
-  .map(([n, o]) => ({ n, o }));
-const DISTRICTS = ['Merkez', 'Çarşı', 'Sanayi', 'Cumhuriyet', 'Yeni Mahalle', 'Terminal', 'Çevre Yolu', 'Atatürk Bulvarı', 'Organize Sanayi', 'Havalimanı Yolu', 'Üniversite', 'Sahil'];
-
+const BRANDS = [{ n: 'Opet' }, { n: 'Petrol Ofisi' }, { n: 'Aytemiz' }];
 function slug(s) { return s.toLocaleLowerCase('tr').replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[^a-z0-9]+/g, '-'); }
+const CITIES = ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 'Konya', 'Gaziantep', 'Kayseri', 'Eskişehir', 'Trabzon', 'Samsun', 'Diyarbakır', 'Mersin', 'Muğla']
+  .map(n => ({ n, s: slug(n) }));
 const cityByName = n => CITIES.find(c => c.n === n) || CITIES[0];
 const cityBySlug = s => CITIES.find(c => c.s === s);
 
-const num = n => n.toFixed(2).replace('.', ',');
-const tl = n => num(n) + ' ₺';
+const num = n => (n == null || isNaN(n)) ? '—' : n.toFixed(2).replace('.', ',');
+const tl = n => (n == null || isNaN(n)) ? '—' : num(n) + ' ₺';
+
+// ---- Gerçek veri yükleme ----
+let REAL = null;
+const DATA_READY = fetch('data/prices.json').then(r => r.json()).then(d => {
+  REAL = d;
+  FUEL_KEYS.forEach(f => { const v = rawPrice(f, 'İstanbul'); if (v) FUELS[f].base = +v.toFixed(2); });
+}).catch(() => { REAL = null; })
+  .then(() => fetch('data/history.json').then(r => r.json()).then(h => { HIST = h; }).catch(() => {}));
+let HIST = {};
+const dataInfo = () => REAL && { updatedAt: REAL.updatedAt, sources: REAL.sources };
+
+// brand verilmezse markaların ortalaması (il referans fiyatı)
+function rawPrice(f, city, brand = null) {
+  const c = REAL?.cities[city]; if (!c) return null;
+  if (brand) return c.brands[brand]?.[f] ?? null;
+  const v = Object.values(c.brands).map(b => b[f]).filter(x => x != null);
+  return v.length ? v.reduce((a, b) => a + b) / v.length : null;
+}
+const priceOf = (f, city = 'İstanbul', brand = null) => {
+  const r = rawPrice(f, city, brand);
+  if (r == null) return brand ? null : +FUELS[f].base.toFixed(2);
+  const o = Store.get('override', {})[f];   // admin manuel fiyatı: İstanbul referansına göre tüm şehirlere kaydırır
+  return +(r + (o != null ? o - (rawPrice(f, 'İstanbul') ?? FUELS[f].base) : 0)).toFixed(2);
+};
 
 function seeded(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
-const baseOf = f => (Store.get('override', {})[f] ?? FUELS[f].base);
-const cityOff = (f, city) => cityByName(city).o * (f === 'lpg' ? .45 : 1);
-const brandOff = (f, brand) => (BRANDS.find(b => b.n === brand)?.o ?? 0) * (f === 'lpg' ? .3 : 1);
-const priceOf = (f, city = 'İstanbul', brand = 'Opet') => +(baseOf(f) + cityOff(f, city) + brandOff(f, brand)).toFixed(2);
-
-// 365 günlük basamaklı seri (akaryakıt fiyatları günlük değil, zam/indirimle değişir)
+// 365 günlük basamaklı seri (ÖRNEK veri: zam/indirimle değişen, bugünkü gerçek fiyatta biten)
 const _hist = {};
 function series(f) {
   if (_hist[f]) return _hist[f];
@@ -53,32 +67,30 @@ function makeForecast(f, n = 7) {
   return { mid, lo, hi, diff, conf: Math.round(78 - Math.abs(diff) * 3),
     dir: Math.abs(diff) < FUELS[f].base * .002 ? 'flat' : diff > 0 ? 'up' : 'down' };
 }
+function realDiff(f, city) {
+  const days = Object.keys(HIST).sort(); if (days.length < 2) return null;
+  const avg = d => { const v = Object.values(HIST[d]?.[city] ?? {}).map(b => b[f]).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b) / v.length : null; };
+  const a = avg(days.at(-1)), b = avg(days.at(-2));
+  return a == null || b == null ? null : +(a - b).toFixed(2);
+}
+function lastChangeAge(f) { const s = series(f); let i = s.length - 1; while (i > 0 && s[i] === s[i - 1]) i--; return s.length - 1 - i; }
 
-const delay = (v) => new Promise(r => setTimeout(() => r(v), 60));
+const delay = (fn) => DATA_READY.then(fn);
 const API = {
-  cities: () => delay(CITIES),
-  // Güncel fiyatlar: { benzin:{price,prev,diff}, ... }
-  prices: (city) => delay(Object.fromEntries(FUEL_KEYS.map(f => {
-    const s = series(f), now = priceOf(f, city), d = s.at(-1) - s[s.length - 2 - lastChangeAge(f)];
-    return [f, { price: now, prev: +(now - d).toFixed(2), diff: +d.toFixed(2), age: lastChangeAge(f) }];
-  }))),
-  history: (f, days = 30) => delay({ values: series(f).slice(-days), labels: Array.from({ length: days }, (_, i) => dayLabel(days - 1 - i)) }),
-  forecast: (f, n = 7) => delay({ ...makeForecast(f, n), labels: Array.from({ length: n }, (_, i) => dayLabel(-(i + 1))) }),
-  brands: (city) => delay(BRANDS.map(b => ({ name: b.n, ...Object.fromEntries(FUEL_KEYS.map(f => [f, priceOf(f, city, b.n)])) }))),
-  ranking: (f) => delay(CITIES.map(c => ({ city: c.n, slug: c.s, price: priceOf(f, c.n) })).sort((a, b) => a.price - b.price)),
-  // Zam/indirim kayıtları
-  changes: (f = null, limit = 8, days = 180) => {
+  cities: () => delay(() => CITIES),
+  info: () => delay(dataInfo),
+  // Güncel fiyatlar: { benzin:{price,diff}, ... }  diff = önceki günlük kayda göre gerçek değişim; kayıt yoksa null
+  prices: (city) => delay(() => Object.fromEntries(FUEL_KEYS.map(f => [f, { price: priceOf(f, city), diff: realDiff(f, city) }]))),
+  history: (f, days = 30) => delay(() => ({ values: series(f).slice(-days), labels: Array.from({ length: days }, (_, i) => dayLabel(days - 1 - i)) })),
+  forecast: (f, n = 7) => delay(() => ({ ...makeForecast(f, n), labels: Array.from({ length: n }, (_, i) => dayLabel(-(i + 1))) })),
+  // Markalar: bir markada olmayan yakıt null döner (ör. Opet LPG)
+  brands: (city) => delay(() => BRANDS.map(b => ({ name: b.n, ...Object.fromEntries(FUEL_KEYS.map(f => [f, priceOf(f, city, b.n)])) })).filter(b => FUEL_KEYS.some(f => b[f] != null))),
+  ranking: (f) => delay(() => CITIES.map(c => ({ city: c.n, slug: c.s, price: priceOf(f, c.n) })).sort((a, b) => a.price - b.price)),
+  // İlçe bazlı gerçek Opet fiyatları
+  districts: (city) => delay(() => (REAL?.cities[city]?.districts ?? []).map(d => ({ name: d.name, benzin: d.benzin, motorin: d.motorin }))),
+  changes: (f = null, limit = 8, days = 180) => delay(() => {
     const keys = f ? [f] : FUEL_KEYS, out = [];
     keys.forEach(k => { const s = series(k); for (let i = s.length - 1; i > s.length - days; i--) if (s[i] !== s[i - 1]) out.push({ fuel: k, date: isoDay(s.length - 1 - i), from: s[i - 1], to: s[i], diff: +(s[i] - s[i - 1]).toFixed(2), ago: s.length - 1 - i }); });
-    return delay(out.sort((a, b) => a.ago - b.ago).slice(0, limit));
-  },
-  stations: (city) => {
-    const rnd = seeded(city.length * 131 + 7), c = cityByName(city);
-    return delay(Array.from({ length: 10 }, (_, i) => {
-      const b = BRANDS[Math.floor(rnd() * BRANDS.length)], d = DISTRICTS[(i * 5 + Math.floor(rnd() * 3)) % DISTRICTS.length];
-      return { brand: b.n, district: d, km: +(rnd() * 12 + .4).toFixed(1), name: `${b.n} ${d}`, q: `${b.n} ${d} ${c.n}`,
-        ...Object.fromEntries(FUEL_KEYS.map(f => [f, +(priceOf(f, city, b.n) + (rnd() - .5) * .12).toFixed(2)])) };
-    }).sort((a, b) => a.km - b.km));
-  },
+    return out.sort((a, b) => a.ago - b.ago).slice(0, limit);
+  }),
 };
-function lastChangeAge(f) { const s = series(f); let i = s.length - 1; while (i > 0 && s[i] === s[i - 1]) i--; return s.length - 1 - i; }

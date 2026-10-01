@@ -28,6 +28,7 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 const c = cityBySlug(new URLSearchParams(location.search).get('s')) || cityByName(Store.city);
 document.title = `${c.n} Benzin, Motorin, LPG Fiyatları | YakıtRadar`;
 $('#h1').textContent = `${c.n} akaryakıt fiyatları`;
@@ -39,10 +40,10 @@ document.head.append(ld);
 const [P, H, B] = await Promise.all([API.prices(c.n), API.history('benzin', 30), API.brands(c.n)]);
 $('#cards').innerHTML = FUEL_KEYS.map(k => `<div class="card pc rv" style="--c:${FUELS[k].color}"><div class="hd"><span>${FUELS[k].name}</span><i data-lucide="${FUELS[k].icon}" class="i" style="color:${FUELS[k].color}"></i></div>
   <div class="big">${num(P[k].price)}<small>₺/L</small></div>${deltaHTML(P[k].diff)}</div>`).join('');
-const off = c.o;
+const off = priceOf('benzin', c.n) - priceOf('benzin', 'İstanbul');
 ChartKit.line($('#chart'), { labels: H.labels, legend: false, yFmt: v => v.toFixed(2) + ' ₺', series: [{ label: 'Benzin 95', data: H.values.map(v => +(v + off).toFixed(2)), color: FUELS.benzin.color, fill: true, step: true }] });
-const best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...B.map(b => b[f]))]));
-$('#brands').innerHTML = B.map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num">${num(b[f])}${b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">●</span>' : ''}</td>`).join('')}</tr>`).join('');
+const best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...B.map(b => b[f]).filter(x => x != null))]));
+$('#brands').innerHTML = B.map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num">${num(b[f])}${b[f] != null && b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">●</span>' : ''}</td>`).join('')}</tr>`).join('');
 $('#others').innerHTML = CITIES.filter(x => x.s !== c.s).map(x => `<a class="chip" href="sehir.html?s=${x.s}">${x.n}</a>`).join('');
 icons(); reveal();
 </script>

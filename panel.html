@@ -47,11 +47,12 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 const user = Auth.require(); if (!user) throw 0;
 const key = k => `${k}:${user.id}`, G = (k, d) => Store.get(key(k), d), S = (k, v) => Store.set(key(k), v);
 const opt = (arr, sel) => arr.map(([v, t]) => `<option value="${v}" ${v === sel ? 'selected' : ''}>${t}</option>`).join('');
 const fuelOpts = sel => opt(FUEL_KEYS.map(k => [k, FUELS[k].name]), sel), cityOpts = sel => opt(CITIES.map(c => [c.n, c.n]), sel);
-let favs = G('favs', ['İstanbul', 'Ankara']), alerts = G('alerts', [{ id: 1, fuel: 'benzin', city: 'İstanbul', price: 57.5 }, { id: 2, fuel: 'lpg', city: 'Ankara', price: 27 }]);
+let favs = G('favs', ['İstanbul', 'Ankara']), alerts = G('alerts', [{ id: 1, fuel: 'benzin', city: 'İstanbul', price: 84 }, { id: 2, fuel: 'lpg', city: 'Ankara', price: 36 }]);
 let car = G('car', { name: 'Aracım', fuel: 'benzin', cons: 6.5, km: 1500 });
 $('#hello').textContent = `Merhaba, ${user.name.split(' ')[0]}`; $('#uMail').textContent = user.email;
 

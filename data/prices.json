@@ -1,0 +1,1750 @@
+{
+ "updatedAt": "2026-10-01T13:31:03.193Z",
+ "sources": [
+  "Opet",
+  "Petrol Ofisi",
+  "Aytemiz"
+ ],
+ "cities": {
+  "İstanbul": {
+   "brands": {
+    "Opet": {
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    "Petrol Ofisi": {
+     "benzin": 84.5,
+     "motorin": 97.1,
+     "lpg": 36.44
+    }
+   },
+   "districts": [
+    {
+     "name": "Arnavutköy",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Avcılar",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Bağcılar",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Bahçelievler",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Bakırköy",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Başakşehir",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Bayrampaşa",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Beşiktaş",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Beylikdüzü",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Beyoğlu",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Büyükçekmece",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Çatalca",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Esenler",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Esenyurt",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Eyüpsultan",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Fatih",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Gaziosmanpaşa",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Güngören",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Kağıthane",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Küçükçekmece",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Merkez",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Sarıyer",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Silivri",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Sultangazi",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Şişli",
+     "benzin": 84.65,
+     "motorin": 97.14
+    },
+    {
+     "name": "Zeytinburnu",
+     "benzin": 84.65,
+     "motorin": 97.14
+    }
+   ]
+  },
+  "Ankara": {
+   "brands": {
+    "Opet": {
+     "benzin": 85.61,
+     "motorin": 98.22
+    },
+    "Petrol Ofisi": {
+     "benzin": 85.5,
+     "motorin": 98.2,
+     "lpg": 36.54
+    },
+    "Aytemiz": {
+     "benzin": 85.49,
+     "motorin": 98.1,
+     "lpg": 36.51
+    }
+   },
+   "districts": [
+    {
+     "name": "Akyurt",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Altındağ",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Ayaş",
+     "benzin": 85.61,
+     "motorin": 98.22
+    },
+    {
+     "name": "Bala",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Beypazarı",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Çamlıdere",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Çankaya",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Çubuk",
+     "benzin": 85.61,
+     "motorin": 98.22
+    },
+    {
+     "name": "Elmadağ",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Etimesgut",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Evren",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Gölbaşı",
+     "benzin": 85.61,
+     "motorin": 98.22
+    },
+    {
+     "name": "Güdül",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Haymana",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Kahramankazan",
+     "benzin": 85.61,
+     "motorin": 98.22
+    },
+    {
+     "name": "Kalecik",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Keçiören",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Kızılcahamam",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Mamak",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Merkez",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Nallıhan",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Polatlı",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Pursaklar",
+     "benzin": 85.6,
+     "motorin": 98.21
+    },
+    {
+     "name": "Sincan",
+     "benzin": 85.61,
+     "motorin": 98.22
+    },
+    {
+     "name": "Şereflikoçhisar",
+     "benzin": 85.62,
+     "motorin": 98.23
+    },
+    {
+     "name": "Yenimahalle",
+     "benzin": 85.6,
+     "motorin": 98.21
+    }
+   ]
+  },
+  "İzmir": {
+   "brands": {
+    "Opet": {
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    "Petrol Ofisi": {
+     "benzin": 85.8,
+     "motorin": 98.5,
+     "lpg": 36.44
+    },
+    "Aytemiz": {
+     "benzin": 85.78,
+     "motorin": 98.41,
+     "lpg": 36.56
+    }
+   },
+   "districts": [
+    {
+     "name": "Aliağa",
+     "benzin": 85.88,
+     "motorin": 98.51
+    },
+    {
+     "name": "Balçova",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Bayındır",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Bayraklı",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Bergama",
+     "benzin": 85.88,
+     "motorin": 98.51
+    },
+    {
+     "name": "Beydağ",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Bornova",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Buca",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Çeşme",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Çiğli",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Dikili",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Foça",
+     "benzin": 85.88,
+     "motorin": 98.51
+    },
+    {
+     "name": "Gaziemir",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Karabağlar",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Karaburun",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Karşıyaka",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Kemalpaşa",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Kınık",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Kiraz",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Konak",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Menderes",
+     "benzin": 85.89,
+     "motorin": 98.53
+    },
+    {
+     "name": "Menemen",
+     "benzin": 85.88,
+     "motorin": 98.51
+    },
+    {
+     "name": "Merkez",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Narlıdere",
+     "benzin": 85.89,
+     "motorin": 98.52
+    },
+    {
+     "name": "Ödemiş",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Seferihisar",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Selçuk",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Tire",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Torbalı",
+     "benzin": 85.9,
+     "motorin": 98.53
+    },
+    {
+     "name": "Urla",
+     "benzin": 85.9,
+     "motorin": 98.53
+    }
+   ]
+  },
+  "Bursa": {
+   "brands": {
+    "Opet": {
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    "Petrol Ofisi": {
+     "benzin": 85.6,
+     "motorin": 98.1,
+     "lpg": 35.84
+    },
+    "Aytemiz": {
+     "benzin": 85.58,
+     "motorin": 97.99,
+     "lpg": 35.95
+    }
+   },
+   "districts": [
+    {
+     "name": "Büyükorhan",
+     "benzin": 85.7,
+     "motorin": 98.11
+    },
+    {
+     "name": "Gemlik",
+     "benzin": 85.68,
+     "motorin": 98.09
+    },
+    {
+     "name": "Gürsu",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Harmancık",
+     "benzin": 85.7,
+     "motorin": 98.11
+    },
+    {
+     "name": "İnegöl",
+     "benzin": 85.7,
+     "motorin": 98.11
+    },
+    {
+     "name": "İznik",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Karacabey",
+     "benzin": 85.7,
+     "motorin": 98.11
+    },
+    {
+     "name": "Keles",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Kestel",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Merkez",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Mudanya",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Mustafakemalpaşa",
+     "benzin": 85.7,
+     "motorin": 98.11
+    },
+    {
+     "name": "Nilüfer",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Orhaneli",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Orhangazi",
+     "benzin": 85.68,
+     "motorin": 98.09
+    },
+    {
+     "name": "Osmangazi",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Yenişehir",
+     "benzin": 85.69,
+     "motorin": 98.1
+    },
+    {
+     "name": "Yıldırım",
+     "benzin": 85.69,
+     "motorin": 98.1
+    }
+   ]
+  },
+  "Antalya": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.87,
+     "motorin": 99.54
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.8,
+     "motorin": 99.5,
+     "lpg": 36.69
+    },
+    "Aytemiz": {
+     "benzin": 86.74,
+     "motorin": 99.41,
+     "lpg": 36.71
+    }
+   },
+   "districts": [
+    {
+     "name": "Akseki",
+     "benzin": 86.89,
+     "motorin": 99.56
+    },
+    {
+     "name": "Aksu",
+     "benzin": 86.85,
+     "motorin": 99.52
+    },
+    {
+     "name": "Alanya",
+     "benzin": 86.88,
+     "motorin": 99.55
+    },
+    {
+     "name": "Demre",
+     "benzin": 86.89,
+     "motorin": 99.56
+    },
+    {
+     "name": "Döşemealtı",
+     "benzin": 86.86,
+     "motorin": 99.53
+    },
+    {
+     "name": "Elmalı",
+     "benzin": 86.88,
+     "motorin": 99.55
+    },
+    {
+     "name": "Finike",
+     "benzin": 86.88,
+     "motorin": 99.55
+    },
+    {
+     "name": "Gazipaşa",
+     "benzin": 86.88,
+     "motorin": 99.55
+    },
+    {
+     "name": "İbradı",
+     "benzin": 86.87,
+     "motorin": 99.54
+    },
+    {
+     "name": "Kaş",
+     "benzin": 86.89,
+     "motorin": 99.56
+    },
+    {
+     "name": "Kemer",
+     "benzin": 86.87,
+     "motorin": 99.54
+    },
+    {
+     "name": "Kepez",
+     "benzin": 86.85,
+     "motorin": 99.52
+    },
+    {
+     "name": "Konyaaltı",
+     "benzin": 86.85,
+     "motorin": 99.52
+    },
+    {
+     "name": "Korkuteli",
+     "benzin": 86.86,
+     "motorin": 99.53
+    },
+    {
+     "name": "Kumluca",
+     "benzin": 86.88,
+     "motorin": 99.55
+    },
+    {
+     "name": "Manavgat",
+     "benzin": 86.87,
+     "motorin": 99.54
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.85,
+     "motorin": 99.52
+    },
+    {
+     "name": "Muratpaşa",
+     "benzin": 86.85,
+     "motorin": 99.52
+    },
+    {
+     "name": "Serik",
+     "benzin": 86.86,
+     "motorin": 99.53
+    }
+   ]
+  },
+  "Adana": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.4,
+     "motorin": 99,
+     "lpg": 36.86
+    },
+    "Aytemiz": {
+     "benzin": 86.33,
+     "motorin": 98.93,
+     "lpg": 36.78
+    }
+   },
+   "districts": [
+    {
+     "name": "Aladağ",
+     "benzin": 86.46,
+     "motorin": 99.05
+    },
+    {
+     "name": "Ceyhan",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Çukurova",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Feke",
+     "benzin": 86.45,
+     "motorin": 99.04
+    },
+    {
+     "name": "İmamoğlu",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Karaisalı",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Karataş",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Kozan",
+     "benzin": 86.45,
+     "motorin": 99.05
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Pozantı",
+     "benzin": 86.45,
+     "motorin": 99.05
+    },
+    {
+     "name": "Saimbeyli",
+     "benzin": 86.45,
+     "motorin": 99.05
+    },
+    {
+     "name": "Sarıçam",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Seyhan",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Tufanbeyli",
+     "benzin": 86.46,
+     "motorin": 99.06
+    },
+    {
+     "name": "Yumurtalık",
+     "benzin": 86.45,
+     "motorin": 99.05
+    },
+    {
+     "name": "Yüreğir",
+     "benzin": 86.44,
+     "motorin": 99.04
+    }
+   ]
+  },
+  "Konya": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.6,
+     "motorin": 99.3,
+     "lpg": 36.54
+    },
+    "Aytemiz": {
+     "benzin": 86.51,
+     "motorin": 99.26,
+     "lpg": 36.52
+    }
+   },
+   "districts": [
+    {
+     "name": "Ahırlı",
+     "benzin": 86.62,
+     "motorin": 99.37
+    },
+    {
+     "name": "Akören",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Akşehir",
+     "benzin": 86.63,
+     "motorin": 99.39
+    },
+    {
+     "name": "Altınekin",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Beyşehir",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Bozkır",
+     "benzin": 86.64,
+     "motorin": 99.39
+    },
+    {
+     "name": "Cihanbeyli",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Çeltik",
+     "benzin": 86.64,
+     "motorin": 99.39
+    },
+    {
+     "name": "Çumra",
+     "benzin": 86.62,
+     "motorin": 99.38
+    },
+    {
+     "name": "Derbent",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Derebucak",
+     "benzin": 86.64,
+     "motorin": 99.38
+    },
+    {
+     "name": "Doğanhisar",
+     "benzin": 86.64,
+     "motorin": 99.4
+    },
+    {
+     "name": "Emirgazi",
+     "benzin": 86.61,
+     "motorin": 99.36
+    },
+    {
+     "name": "Ereğli",
+     "benzin": 86.6,
+     "motorin": 99.35
+    },
+    {
+     "name": "Güneysınır",
+     "benzin": 86.62,
+     "motorin": 99.36
+    },
+    {
+     "name": "Hadim",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Halkapınar",
+     "benzin": 86.6,
+     "motorin": 99.35
+    },
+    {
+     "name": "Hüyük",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Ilgın",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Kadınhanı",
+     "benzin": 86.63,
+     "motorin": 99.39
+    },
+    {
+     "name": "Karapınar",
+     "benzin": 86.61,
+     "motorin": 99.36
+    },
+    {
+     "name": "Karatay",
+     "benzin": 86.62,
+     "motorin": 99.37
+    },
+    {
+     "name": "Kulu",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Meram",
+     "benzin": 86.62,
+     "motorin": 99.37
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.62,
+     "motorin": 99.37
+    },
+    {
+     "name": "Sarayönü",
+     "benzin": 86.63,
+     "motorin": 99.39
+    },
+    {
+     "name": "Selçuklu",
+     "benzin": 86.62,
+     "motorin": 99.37
+    },
+    {
+     "name": "Seydişehir",
+     "benzin": 86.63,
+     "motorin": 99.39
+    },
+    {
+     "name": "Taşkent",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Tuzlukçu",
+     "benzin": 86.64,
+     "motorin": 99.39
+    },
+    {
+     "name": "Yalıhüyük",
+     "benzin": 86.63,
+     "motorin": 99.38
+    },
+    {
+     "name": "Yunak",
+     "benzin": 86.63,
+     "motorin": 99.38
+    }
+   ]
+  },
+  "Gaziantep": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.59,
+     "motorin": 99.18
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.5,
+     "motorin": 99.1,
+     "lpg": 36.66
+    },
+    "Aytemiz": {
+     "benzin": 86.47,
+     "motorin": 99.06,
+     "lpg": 36.65
+    }
+   },
+   "districts": [
+    {
+     "name": "Araban",
+     "benzin": 86.61,
+     "motorin": 99.2
+    },
+    {
+     "name": "İslahiye",
+     "benzin": 86.57,
+     "motorin": 99.16
+    },
+    {
+     "name": "Karkamış",
+     "benzin": 86.59,
+     "motorin": 99.18
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.58,
+     "motorin": 99.17
+    },
+    {
+     "name": "Nizip",
+     "benzin": 86.59,
+     "motorin": 99.19
+    },
+    {
+     "name": "Nurdağı",
+     "benzin": 86.57,
+     "motorin": 99.16
+    },
+    {
+     "name": "Oğuzeli",
+     "benzin": 86.59,
+     "motorin": 99.18
+    },
+    {
+     "name": "Şahinbey",
+     "benzin": 86.58,
+     "motorin": 99.17
+    },
+    {
+     "name": "Şehitkamil",
+     "benzin": 86.58,
+     "motorin": 99.17
+    },
+    {
+     "name": "Yavuzeli",
+     "benzin": 86.59,
+     "motorin": 99.18
+    }
+   ]
+  },
+  "Kayseri": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.5,
+     "motorin": 99.2,
+     "lpg": 36.54
+    },
+    "Aytemiz": {
+     "benzin": 86.5,
+     "motorin": 99.11,
+     "lpg": 36.63
+    }
+   },
+   "districts": [
+    {
+     "name": "Akkışla",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Bünyan",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Develi",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Felahiye",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Hacılar",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "İncesu",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Kocasinan",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Melikgazi",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Özvatan",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Pınarbaşı",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Sarıoğlan",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Sarız",
+     "benzin": 86.62,
+     "motorin": 99.23
+    },
+    {
+     "name": "Talas",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Tomarza",
+     "benzin": 86.61,
+     "motorin": 99.22
+    },
+    {
+     "name": "Yahyalı",
+     "benzin": 86.6,
+     "motorin": 99.21
+    },
+    {
+     "name": "Yeşilhisar",
+     "benzin": 86.6,
+     "motorin": 99.21
+    }
+   ]
+  },
+  "Eskişehir": {
+   "brands": {
+    "Opet": {
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    "Petrol Ofisi": {
+     "benzin": 85.8,
+     "motorin": 98.3,
+     "lpg": 35.95
+    },
+    "Aytemiz": {
+     "benzin": 85.77,
+     "motorin": 98.18,
+     "lpg": 36.12
+    }
+   },
+   "districts": [
+    {
+     "name": "Alpu",
+     "benzin": 85.88,
+     "motorin": 98.29
+    },
+    {
+     "name": "Beylikova",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Çifteler",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Günyüzü",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Han",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "İnönü",
+     "benzin": 85.87,
+     "motorin": 98.28
+    },
+    {
+     "name": "Mahmudiye",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Merkez",
+     "benzin": 85.88,
+     "motorin": 98.29
+    },
+    {
+     "name": "Mihalgazi",
+     "benzin": 85.87,
+     "motorin": 98.28
+    },
+    {
+     "name": "Mihalıççık",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Odunpazarı",
+     "benzin": 85.88,
+     "motorin": 98.29
+    },
+    {
+     "name": "Sarıcakaya",
+     "benzin": 85.87,
+     "motorin": 98.28
+    },
+    {
+     "name": "Seyitgazi",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Sivrihisar",
+     "benzin": 85.89,
+     "motorin": 98.3
+    },
+    {
+     "name": "Tepebaşı",
+     "benzin": 85.88,
+     "motorin": 98.29
+    }
+   ]
+  },
+  "Trabzon": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.3,
+     "motorin": 98.9,
+     "lpg": 37.24
+    },
+    "Aytemiz": {
+     "benzin": 86.24,
+     "motorin": 98.86,
+     "lpg": 37.24
+    }
+   },
+   "districts": [
+    {
+     "name": "Akçaabat",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Araklı",
+     "benzin": 86.36,
+     "motorin": 98.99
+    },
+    {
+     "name": "Arsin",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Beşikdüzü",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Çarşıbaşı",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Çaykara",
+     "benzin": 86.36,
+     "motorin": 98.98
+    },
+    {
+     "name": "Düzköy",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Maçka",
+     "benzin": 86.36,
+     "motorin": 98.98
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Of",
+     "benzin": 86.37,
+     "motorin": 99
+    },
+    {
+     "name": "Ortahisar",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Sürmene",
+     "benzin": 86.37,
+     "motorin": 99
+    },
+    {
+     "name": "Şalpazarı",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Tonya",
+     "benzin": 86.35,
+     "motorin": 98.98
+    },
+    {
+     "name": "Vakfıkebir",
+     "benzin": 86.35,
+     "motorin": 98.97
+    },
+    {
+     "name": "Yomra",
+     "benzin": 86.35,
+     "motorin": 98.98
+    }
+   ]
+  },
+  "Samsun": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.1,
+     "motorin": 98.8,
+     "lpg": 36.84
+    },
+    "Aytemiz": {
+     "benzin": 86.08,
+     "motorin": 98.67,
+     "lpg": 36.85
+    }
+   },
+   "districts": [
+    {
+     "name": "Alaçam",
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    {
+     "name": "Asarcık",
+     "benzin": 86.2,
+     "motorin": 98.78
+    },
+    {
+     "name": "Atakum",
+     "benzin": 86.19,
+     "motorin": 98.78
+    },
+    {
+     "name": "Ayvacık",
+     "benzin": 86.2,
+     "motorin": 98.78
+    },
+    {
+     "name": "Bafra",
+     "benzin": 86.2,
+     "motorin": 98.8
+    },
+    {
+     "name": "Canik",
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    {
+     "name": "Çarşamba",
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    {
+     "name": "Havza",
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    {
+     "name": "İlkadım",
+     "benzin": 86.19,
+     "motorin": 98.78
+    },
+    {
+     "name": "Kavak",
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    {
+     "name": "Ladik",
+     "benzin": 86.2,
+     "motorin": 98.79
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.19,
+     "motorin": 98.78
+    },
+    {
+     "name": "Ondokuzmayıs",
+     "benzin": 86.2,
+     "motorin": 98.78
+    },
+    {
+     "name": "Salıpazarı",
+     "benzin": 86.2,
+     "motorin": 98.78
+    },
+    {
+     "name": "Tekkeköy",
+     "benzin": 86.19,
+     "motorin": 98.78
+    },
+    {
+     "name": "Terme",
+     "benzin": 86.2,
+     "motorin": 98.77
+    },
+    {
+     "name": "Vezirköprü",
+     "benzin": 86.21,
+     "motorin": 98.79
+    },
+    {
+     "name": "Yakakent",
+     "benzin": 86.2,
+     "motorin": 98.79
+    }
+   ]
+  },
+  "Diyarbakır": {
+   "brands": {
+    "Opet": {
+     "benzin": 87.08,
+     "motorin": 99.8
+    },
+    "Petrol Ofisi": {
+     "benzin": 87.1,
+     "motorin": 99.8,
+     "lpg": 37.51
+    },
+    "Aytemiz": {
+     "benzin": 86.96,
+     "motorin": 99.68,
+     "lpg": 37.56
+    }
+   },
+   "districts": [
+    {
+     "name": "Bağlar",
+     "benzin": 87.07,
+     "motorin": 99.79
+    },
+    {
+     "name": "Bismil",
+     "benzin": 87.07,
+     "motorin": 99.8
+    },
+    {
+     "name": "Çermik",
+     "benzin": 87.08,
+     "motorin": 99.79
+    },
+    {
+     "name": "Çınar",
+     "benzin": 87.08,
+     "motorin": 99.8
+    },
+    {
+     "name": "Çüngüş",
+     "benzin": 87.09,
+     "motorin": 99.8
+    },
+    {
+     "name": "Dicle",
+     "benzin": 87.09,
+     "motorin": 99.8
+    },
+    {
+     "name": "Eğil",
+     "benzin": 87.09,
+     "motorin": 99.8
+    },
+    {
+     "name": "Ergani",
+     "benzin": 87.09,
+     "motorin": 99.8
+    },
+    {
+     "name": "Hani",
+     "benzin": 87.08,
+     "motorin": 99.81
+    },
+    {
+     "name": "Hazro",
+     "benzin": 87.08,
+     "motorin": 99.8
+    },
+    {
+     "name": "Kayapınar",
+     "benzin": 87.07,
+     "motorin": 99.79
+    },
+    {
+     "name": "Kocaköy",
+     "benzin": 87.08,
+     "motorin": 99.8
+    },
+    {
+     "name": "Kulp",
+     "benzin": 87.09,
+     "motorin": 99.81
+    },
+    {
+     "name": "Lice",
+     "benzin": 87.08,
+     "motorin": 99.81
+    },
+    {
+     "name": "Merkez",
+     "benzin": 87.07,
+     "motorin": 99.79
+    },
+    {
+     "name": "Silvan",
+     "benzin": 87.07,
+     "motorin": 99.81
+    },
+    {
+     "name": "Sur",
+     "benzin": 87.07,
+     "motorin": 99.79
+    },
+    {
+     "name": "Yenişehir",
+     "benzin": 87.07,
+     "motorin": 99.79
+    }
+   ]
+  },
+  "Mersin": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.4,
+     "motorin": 99,
+     "lpg": 37.16
+    },
+    "Aytemiz": {
+     "benzin": 86.32,
+     "motorin": 98.92,
+     "lpg": 37.12
+    }
+   },
+   "districts": [
+    {
+     "name": "Akdeniz",
+     "benzin": 86.43,
+     "motorin": 99.03
+    },
+    {
+     "name": "Anamur",
+     "benzin": 86.46,
+     "motorin": 99.06
+    },
+    {
+     "name": "Aydıncık",
+     "benzin": 86.45,
+     "motorin": 99.05
+    },
+    {
+     "name": "Bozyazı",
+     "benzin": 86.46,
+     "motorin": 99.04
+    },
+    {
+     "name": "Çamlıyayla",
+     "benzin": 86.45,
+     "motorin": 99.06
+    },
+    {
+     "name": "Erdemli",
+     "benzin": 86.43,
+     "motorin": 99.03
+    },
+    {
+     "name": "Gülnar",
+     "benzin": 86.45,
+     "motorin": 99.04
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.43,
+     "motorin": 99.03
+    },
+    {
+     "name": "Mezitli",
+     "benzin": 86.43,
+     "motorin": 99.03
+    },
+    {
+     "name": "Mut",
+     "benzin": 86.44,
+     "motorin": 99.05
+    },
+    {
+     "name": "Silifke",
+     "benzin": 86.44,
+     "motorin": 99.04
+    },
+    {
+     "name": "Tarsus",
+     "benzin": 86.43,
+     "motorin": 99.03
+    },
+    {
+     "name": "Toroslar",
+     "benzin": 86.43,
+     "motorin": 99.03
+    },
+    {
+     "name": "Yenişehir",
+     "benzin": 86.43,
+     "motorin": 99.03
+    }
+   ]
+  },
+  "Muğla": {
+   "brands": {
+    "Opet": {
+     "benzin": 86.38,
+     "motorin": 99.04
+    },
+    "Petrol Ofisi": {
+     "benzin": 86.3,
+     "motorin": 99,
+     "lpg": 36.49
+    },
+    "Aytemiz": {
+     "benzin": 86.26,
+     "motorin": 98.91,
+     "lpg": 36.62
+    }
+   },
+   "districts": [
+    {
+     "name": "Bodrum",
+     "benzin": 86.38,
+     "motorin": 99.03
+    },
+    {
+     "name": "Dalaman",
+     "benzin": 86.5,
+     "motorin": 99.15
+    },
+    {
+     "name": "Datça",
+     "benzin": 86.39,
+     "motorin": 99.05
+    },
+    {
+     "name": "Fethiye",
+     "benzin": 86.63,
+     "motorin": 99.2
+    },
+    {
+     "name": "Kavaklıdere",
+     "benzin": 86.37,
+     "motorin": 99.02
+    },
+    {
+     "name": "Köyceğiz",
+     "benzin": 86.38,
+     "motorin": 99.04
+    },
+    {
+     "name": "Marmaris",
+     "benzin": 86.38,
+     "motorin": 99.04
+    },
+    {
+     "name": "Menteşe",
+     "benzin": 86.37,
+     "motorin": 99.02
+    },
+    {
+     "name": "Merkez",
+     "benzin": 86.37,
+     "motorin": 99.02
+    },
+    {
+     "name": "Milas",
+     "benzin": 86.37,
+     "motorin": 99.02
+    },
+    {
+     "name": "Ortaca",
+     "benzin": 86.4,
+     "motorin": 99.05
+    },
+    {
+     "name": "Seydikemer",
+     "benzin": 86.63,
+     "motorin": 99.2
+    },
+    {
+     "name": "Ula",
+     "benzin": 86.38,
+     "motorin": 99.03
+    },
+    {
+     "name": "Yatağan",
+     "benzin": 86.37,
+     "motorin": 99.02
+    }
+   ]
+  }
+ }
+}

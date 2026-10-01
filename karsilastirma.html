@@ -21,7 +21,7 @@
   </header>
 
   <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;margin-bottom:20px">
-    <div class="chips" id="mode"><button class="chip on" data-v="cities">Şehirler</button><button class="chip" data-v="brands">Markalar</button><button class="chip" data-v="stations">Yakın istasyonlar</button><button class="chip" data-v="vs">İki şehir</button></div>
+    <div class="chips" id="mode"><button class="chip on" data-v="cities">Şehirler</button><button class="chip" data-v="brands">Markalar</button><button class="chip" data-v="stations">İlçeler</button><button class="chip" data-v="vs">İki şehir</button></div>
     <div id="fuelBox"></div>
   </div>
 
@@ -30,7 +30,8 @@
   <section id="v-brands" hidden><div class="twrap"><table><thead><tr><th>Marka</th><th>Benzin 95</th><th>Motorin</th><th>LPG</th></tr></thead><tbody id="brandRows"></tbody></table></div>
     <p class="small mute" style="margin-top:12px" id="brandNote"></p></section>
 
-  <section id="v-stations" hidden><div class="twrap"><table><thead><tr><th>İstasyon</th><th>Uzaklık</th><th>Benzin</th><th>Motorin</th><th>LPG</th><th></th></tr></thead><tbody id="stRows"></tbody></table></div></section>
+  <section id="v-stations" hidden><div class="twrap"><table><thead><tr><th>İlçe</th><th>Benzin 95</th><th>Motorin</th></tr></thead><tbody id="stRows"></tbody></table></div>
+    <p class="small mute" style="margin-top:12px">Opet ilçe bazlı pompa fiyatları.</p></section>
 
   <section id="v-vs" hidden>
     <div class="card"><div class="row" style="align-items:end"><div class="field" style="margin:0"><label>Şehir A</label><select id="vsA"></select></div><div class="field" style="margin:0"><label>Şehir B</label><select id="vsB"></select></div></div>
@@ -41,6 +42,7 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 let mode = 'cities', fuel = 'benzin';
 $('#fuelBox').innerHTML = fuelChips(fuel, 'fc');
 $('#vsA').innerHTML = $('#vsB').innerHTML = CITIES.map(c => `<option>${c.n}</option>`).join('');
@@ -54,16 +56,13 @@ async function drawCities() {
   requestAnimationFrame(() => $$('.fl').forEach(f => f.style.width = f.dataset.w + '%'));
 }
 async function drawBrands() {
-  const B = await API.brands(Store.city), best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...B.map(b => b[f]))]));
-  $('#brandRows').innerHTML = B.sort((a, b) => a[fuel] - b[fuel]).map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--accent)"' : ''}>${tl(b[f])}${b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}</tr>`).join('');
-  $('#brandNote').textContent = `${Store.city} için marka bazlı referans fiyatlar. Seçili yakıta göre sıralı.`;
+  const B = await API.brands(Store.city), vals = f => B.map(b => b[f]).filter(x => x != null), best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...vals(f))]));
+  $('#brandRows').innerHTML = [...B].sort((a, b) => (a[fuel] ?? 1e9) - (b[fuel] ?? 1e9)).map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--accent)"' : ''}>${b[f] == null ? '<span class="mute">—</span>' : tl(b[f])}${b[f] != null && b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}</tr>`).join('');
+  $('#brandNote').textContent = `${Store.city} için marka bazlı gerçek pompa fiyatları. Her markada her yakıt türü satılmayabilir (—).`;
 }
 async function drawStations() {
-  const S = await API.stations(Store.city), best = Math.min(...S.map(s => s[fuel]));
-  $('#stRows').innerHTML = S.map(s => `<tr><td><b>${s.brand}</b> <span class="mute">${s.district}</span></td><td class="num">${s.km} km</td>
-    ${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--accent)"' : ''}>${num(s[f])}${f === fuel && s[f] === best ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}
-    <td><a class="btn ghost sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${encodeURIComponent(s.q)}"><i data-lucide="navigation" class="i"></i>Yol tarifi</a></td></tr>`).join('');
-  icons();
+  const D = await API.districts(Store.city), key = fuel === 'lpg' ? 'benzin' : fuel, best = Math.min(...D.map(d => d[key])), spread = Math.max(...D.map(d => d[key])) > best;
+  $('#stRows').innerHTML = [...D].sort((a, b) => a[key] - b[key]).map(d => `<tr><td><b>${d.name}</b></td>${['benzin', 'motorin'].map(f => `<td class="num" ${f === key ? 'style="color:var(--accent)"' : ''}>${num(d[f])}${f === key && spread && d[f] === best ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="3" class="empty">Veri yok</td></tr>';
 }
 function drawVs() {
   const a = $('#vsA').value, b = $('#vsB').value, L = +$('#vsL').value || 0;

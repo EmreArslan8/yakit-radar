@@ -42,6 +42,7 @@
 <div id="foot"></div>
 
 <script type="module">
+await DATA_READY;
 if (!Auth.require('admin')) throw 0;
 const rnd = seeded(5);
 $('#kpi').innerHTML = [['Kullanıcı', Auth.users().length + 12478, 'users'], ['Bugünkü ziyaret', '8.215', 'eye'], ['Aktif alarm', '3.902', 'bell-ring'], ['API durumu', 'Sağlıklı', 'heart-pulse']]

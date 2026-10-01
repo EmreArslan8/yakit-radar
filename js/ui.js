@@ -48,6 +48,7 @@ function reveal() {
 function toast(msg) { const t = $('#toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2200); }
 
 function deltaHTML(diff) {
+  if (diff == null) return '';
   if (Math.abs(diff) < .005) return `<span class="delta flat"><i data-lucide="minus" class="i"></i>0,00</span>`;
   return `<span class="delta ${diff > 0 ? 'up' : 'down'}"><i data-lucide="${diff > 0 ? 'arrow-up-right' : 'arrow-down-right'}" class="i"></i>${diff > 0 ? '+' : ''}${num(diff)}</span>`;
 }
@@ -61,7 +62,7 @@ function spark(values, color, w = 300, h = 56) {
 }
 function countUp(el, to, dur = 900) {
   const t0 = performance.now(), from = +el.dataset.v || to * .96;
-  const step = t => { const k = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - k, 3); el.textContent = num(from + (to - from) * e); if (k < 1) requestAnimationFrame(step); else el.dataset.v = to; };
+  const step = t => { const k = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - k, 3); el.textContent = (el.dataset.dot ? num(from + (to - from) * e).replace(",", ".") : num(from + (to - from) * e)); if (k < 1) requestAnimationFrame(step); else el.dataset.v = to; };
   requestAnimationFrame(step);
 }
 const fuelChips = (sel, id = 'fuelChips') => `<div class="chips" id="${id}">${FUEL_KEYS.map(k => `<button class="chip ${k === sel ? 'on' : ''}" data-f="${k}" style="--c:${FUELS[k].color}"><span class="dot"></span>${FUELS[k].short}</button>`).join('')}</div>`;

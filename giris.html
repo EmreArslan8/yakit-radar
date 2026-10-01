@@ -29,6 +29,7 @@
 </div></main>
 <div id="foot"></div>
 <script type="module">
+await DATA_READY;
 let mode = 'login';
 const next = new URLSearchParams(location.search).get('next');
 if (Auth.current()) location.replace(Auth.current().role === 'admin' ? 'admin.html' : 'panel.html');
