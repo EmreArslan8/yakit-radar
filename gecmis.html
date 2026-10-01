@@ -5,7 +5,7 @@
 <meta name="description" content="Benzin, motorin ve LPG fiyat geçmişi grafikleri, zam-indirim kayıtları ve 7 günlük AI fiyat tahmini.">
 <meta name="theme-color" content="#090b0a"><meta property="og:title" content="Fiyat geçmişi ve AI tahmin"><meta property="og:type" content="website">
 <link rel="canonical" href="https://yakitradar.example/gecmis.html">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ffc233'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -53,9 +53,9 @@ async function render() {
   chart?.destroy();
   chart = ChartKit.line($('#chart'), { labels: [...H.labels, ...F.labels], yFmt: v => v.toFixed(2) + ' ₺', series: [
     { label: FUELS[fuel].name, data: [...h.map(a), ...pad(7)], color, fill: true, step: true },
-    { label: 'alt', data: [...pad(days - 1), last, ...F.lo.map(a)], color: '#c8ff3d', meta: true },
-    { label: 'üst', data: [...pad(days - 1), last, ...F.hi.map(a)], color: '#c8ff3d', meta: true, fillPrev: true },
-    { label: 'AI tahmin', data: [...pad(days - 1), last, ...F.mid.map(a)], color: '#c8ff3d', dash: true },
+    { label: 'alt', data: [...pad(days - 1), last, ...F.lo.map(a)], color: '#ffc233', meta: true },
+    { label: 'üst', data: [...pad(days - 1), last, ...F.hi.map(a)], color: '#ffc233', meta: true, fillPrev: true },
+    { label: 'AI tahmin', data: [...pad(days - 1), last, ...F.mid.map(a)], color: '#ffc233', dash: true },
   ] });
   const mn = Math.min(...h), mx = Math.max(...h), chg = h.at(-1) - h[0];
   $('#stats').innerHTML = [['Güncel', tl(last), 'gauge'], [`${days}g en düşük`, tl(a(mn)), 'arrow-down-right'], [`${days}g en yüksek`, tl(a(mx)), 'arrow-up-right'], [`${days}g değişim`, (chg > 0 ? '+' : '') + num(chg) + ' ₺', 'activity']]

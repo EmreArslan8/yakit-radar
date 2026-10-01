@@ -1,6 +1,6 @@
 // VERİ KATMANI — sayfalar yalnızca API.* kullanır. Gerçek entegrasyonda sadece bu dosya değişir.
 const FUELS = {
-  benzin:  { key: 'benzin',  name: 'Benzin 95', short: 'Benzin', base: 58.42, color: '#ff8a3d', icon: 'fuel' },
+  benzin:  { key: 'benzin',  name: 'Benzin 95', short: 'Benzin', base: 58.42, color: '#ff6b4a', icon: 'fuel' },
   motorin: { key: 'motorin', name: 'Motorin',   short: 'Motorin', base: 56.18, color: '#4db2ff', icon: 'droplets' },
   lpg:     { key: 'lpg',     name: 'LPG',       short: 'LPG', base: 27.35, color: '#3ddc97', icon: 'flame' },
 };

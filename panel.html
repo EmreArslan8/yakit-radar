@@ -2,7 +2,7 @@
 <html lang="tr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Panelim | YakıtRadar</title><meta name="robots" content="noindex"><meta name="theme-color" content="#090b0a">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ffc233'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -69,7 +69,7 @@ function drawAlerts() {
 function drawFavs() { $('#favPick').innerHTML = CITIES.map(c => `<button class="chip ${favs.includes(c.n) ? 'on' : ''}" data-c="${c.n}"><i data-lucide="star" class="i" style="width:14px;height:14px"></i>${c.n}</button>`).join(''); }
 function drawCar() {
   const p = priceOf(car.fuel, Store.city), L = car.km * car.cons / 100;
-  $('#cOut').innerHTML = `<span class="eyebrow">Aylık tahmin · ${Store.city}</span><div class="mono" style="font-size:2.6rem;color:var(--lime);margin:12px 0">${tl(L * p)}</div>
+  $('#cOut').innerHTML = `<span class="eyebrow">Aylık tahmin · ${Store.city}</span><div class="mono" style="font-size:2.6rem;color:var(--accent);margin:12px 0">${tl(L * p)}</div>
     <div class="item"><span class="mute">Litre</span><b class="mono">${L.toFixed(1)} L</b></div><div class="item"><span class="mute">100 km maliyeti</span><b class="mono">${tl(car.cons * p)}</b></div><div class="item"><span class="mute">Yıllık</span><b class="mono">${tl(L * p * 12)}</b></div>`;
 }
 const all = () => { drawHome(); drawAlerts(); drawFavs(); drawCar(); icons(); };

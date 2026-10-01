@@ -2,7 +2,7 @@
 <html lang="tr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin Paneli | YakıtRadar</title><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#090b0a">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ffc233'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -45,9 +45,9 @@
 if (!Auth.require('admin')) throw 0;
 const rnd = seeded(5);
 $('#kpi').innerHTML = [['Kullanıcı', Auth.users().length + 12478, 'users'], ['Bugünkü ziyaret', '8.215', 'eye'], ['Aktif alarm', '3.902', 'bell-ring'], ['API durumu', 'Sağlıklı', 'heart-pulse']]
-  .map(([t, v, i]) => `<div class="card flat stat"><span class="lbl"><i data-lucide="${i}" class="i"></i>${t}</span><b ${t === 'API durumu' ? 'style="color:var(--lime)"' : ''}>${typeof v === 'number' ? v.toLocaleString('tr-TR') : v}</b></div>`).join('');
+  .map(([t, v, i]) => `<div class="card flat stat"><span class="lbl"><i data-lucide="${i}" class="i"></i>${t}</span><b ${t === 'API durumu' ? 'style="color:var(--accent)"' : ''}>${typeof v === 'number' ? v.toLocaleString('tr-TR') : v}</b></div>`).join('');
 const visits = Array.from({ length: 30 }, (_, i) => Math.round(5200 + i * 90 + rnd() * 1800));
-ChartKit.line($('#traffic'), { labels: Array.from({ length: 30 }, (_, i) => dayLabel(29 - i)), legend: false, yFmt: v => Math.round(v).toLocaleString('tr-TR'), series: [{ label: 'Ziyaret', data: visits, color: '#c8ff3d', fill: true }] });
+ChartKit.line($('#traffic'), { labels: Array.from({ length: 30 }, (_, i) => dayLabel(29 - i)), legend: false, yFmt: v => Math.round(v).toLocaleString('tr-TR'), series: [{ label: 'Ziyaret', data: visits, color: '#ffc233', fill: true }] });
 
 const ov = () => Store.get('override', {});
 function drawPrices() {

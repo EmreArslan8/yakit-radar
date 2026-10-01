@@ -5,7 +5,7 @@
 <meta name="description" content="Benzin, motorin ve LPG fiyatlarını şehir ve istasyon markasına göre karşılaştırın. İki şehir arasındaki farkı ve yıllık tasarrufu görün.">
 <meta name="theme-color" content="#090b0a"><meta property="og:title" content="Akaryakıt fiyat karşılaştırma"><meta property="og:type" content="website">
 <link rel="canonical" href="https://yakitradar.example/karsilastirma.html">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c8ff3d'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ffc233'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -55,13 +55,13 @@ async function drawCities() {
 }
 async function drawBrands() {
   const B = await API.brands(Store.city), best = Object.fromEntries(FUEL_KEYS.map(f => [f, Math.min(...B.map(b => b[f]))]));
-  $('#brandRows').innerHTML = B.sort((a, b) => a[fuel] - b[fuel]).map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--lime)"' : ''}>${tl(b[f])}${b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}</tr>`).join('');
+  $('#brandRows').innerHTML = B.sort((a, b) => a[fuel] - b[fuel]).map(b => `<tr><td><b>${b.name}</b></td>${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--accent)"' : ''}>${tl(b[f])}${b[f] === best[f] ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}</tr>`).join('');
   $('#brandNote').textContent = `${Store.city} için marka bazlı referans fiyatlar. Seçili yakıta göre sıralı.`;
 }
 async function drawStations() {
   const S = await API.stations(Store.city), best = Math.min(...S.map(s => s[fuel]));
   $('#stRows').innerHTML = S.map(s => `<tr><td><b>${s.brand}</b> <span class="mute">${s.district}</span></td><td class="num">${s.km} km</td>
-    ${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--lime)"' : ''}>${num(s[f])}${f === fuel && s[f] === best ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}
+    ${FUEL_KEYS.map(f => `<td class="num" ${f === fuel ? 'style="color:var(--accent)"' : ''}>${num(s[f])}${f === fuel && s[f] === best ? ' <span class="tag" style="margin-left:6px">En ucuz</span>' : ''}</td>`).join('')}
     <td><a class="btn ghost sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${encodeURIComponent(s.q)}"><i data-lucide="navigation" class="i"></i>Yol tarifi</a></td></tr>`).join('');
   icons();
 }
@@ -70,7 +70,7 @@ function drawVs() {
   $('#vsOut').innerHTML = FUEL_KEYS.map(f => { const pa = priceOf(f, a), pb = priceOf(f, b), d = pa - pb, yr = Math.abs(d) * L;
     return `<div class="card flat stat"><span class="lbl"><span class="dot" style="--c:${FUELS[f].color}"></span>${FUELS[f].short}</span>
       <div class="mono" style="margin-top:12px;display:flex;justify-content:space-between"><span>${a}<br><b style="font-size:1.4rem;display:inline">${num(pa)}</b></span><span style="text-align:right">${b}<br><b style="font-size:1.4rem;display:inline">${num(pb)}</b></span></div>
-      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)" class="small">${Math.abs(d) < .005 ? 'Fark yok.' : `<b style="color:var(--lime)">${d > 0 ? b : a}</b> ${num(Math.abs(d))} ₺/L daha ucuz → yılda <b class="mono">${tl(yr)}</b>`}</div></div>`; }).join('');
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)" class="small">${Math.abs(d) < .005 ? 'Fark yok.' : `<b style="color:var(--accent)">${d > 0 ? b : a}</b> ${num(Math.abs(d))} ₺/L daha ucuz → yılda <b class="mono">${tl(yr)}</b>`}</div></div>`; }).join('');
 }
 function show() {
   $$('main > section').forEach(s => s.hidden = s.id !== 'v-' + mode);
